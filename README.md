@@ -7,6 +7,7 @@ Requirements
 ============
 
 Server: PHP with PDO
+
 Client: A JavaScript enabled browser
 
 
