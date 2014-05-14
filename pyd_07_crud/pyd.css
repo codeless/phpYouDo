@@ -1,0 +1,5 @@
+@import url("//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css");
+div.alert-box a { color: white; text-decoration: underline }
+
+/* hide some reports from the navigation bar: */
+#reports .pyd-report-delete, #reports .pyd-report-edit { display: none }

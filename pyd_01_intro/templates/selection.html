@@ -1,0 +1,26 @@
+<div class="row">
+	<div class="large-12 columns">
+		<form action="?application=01_intro&report=<%= report[0].type %>" method="post">
+			<fieldset>
+				<legend>Fieldset</legend>
+				<div class="row">
+					<div class="large-12 columns">
+						<label>Please choose an record:</label>
+						<select name="lorem">
+							<%
+								_.each(items, function(i) {
+									%>
+										<option value="<%= i.id%>">
+											<%= i.text %>
+										</option>
+									<%
+								});
+							%>
+						</select>
+						<button class="small" type="submit">Go!</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>

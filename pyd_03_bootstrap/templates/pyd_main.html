@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<!-- Set the viewport width to device width for mobile -->
+	<meta name="viewport" content="width=device-width" />
+	<title>PYD using Bootstrap</title>
+	%PYD_STYLES%
+</head>
+<body>
+%PYD_SCRIPTS%
+<script type="text/javascript">
+	function setUp(name, data) {
+		var template = $("#" + name + "Template").html();
+		$("body div.container").append("<div id='" + name + "'></div>");
+		$("#" + name).html(_.template(template, { items: data }));
+	}
+</script>
+
+<div class="container">
+	%PYD_CONTENT%
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<div class="row">
+	<div class="large-12 columns">
+		<form data-abide>
+			<input type="hidden" name="application" value="07_crud">
+			<input type="hidden" name="report" value="create">
+			<input type="hidden" name="id" value="<%= items[0].lorem %>">
+			<fieldset>
+				<legend>Fieldset</legend>
+				<div class="row">
+					<div class="large-12 columns">
+						<label>Ipsum</label>
+						<input	type="text"
+							name="ipsum"
+							value="<%= items[0].ipsum %>"
+							required="required">
+					</div>
+				</div>
+				<div class="row">
+					<div class="large-4 columns">
+						<label>Dolor</label>
+						<input	type="text"
+							name="dolor"
+							value="<%= items[0].dolor %>"
+							pattern="integer">
+					</div>
+					<div class="large-4 columns">
+						<label>Sit</label>
+						<input	type="text"
+							name="sit"
+							value="<%= items[0].sit %>"
+							pattern="integer">
+					</div>
+					<div class="large-4 columns">
+						<label>Amet</label>
+						<input	type="text"
+							name="amet"
+							value="<%= items[0].amet %>"
+							pattern="integer">
+					</div>
+				</div>
+				<button name="submit" value="<%= items[0].status %>"
+					type="submit"><%= items[0].status %></button>
+			</fieldset>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="large-12 columns">
+		<div class="callout panel">
+			<p>
+				Well, this is the individualistic HTML template.
+				Using JavaScript, do whatever you like
+				with the data...
+			</p>
+			<%
+				_.each(items, function(i) {
+					%>
+					<div data-alert class="alert-box">
+					<%= i.lorem %>
+					<%= i.ipsum %>
+					<%= i.dolor %>
+					<%= i.sit %>
+					<%= i.amet %>
+					<a href="#" class="close">&times;</a>
+					</div>
+					<%
+				});
+			%>
+		</div>
+	</div>
+</div>

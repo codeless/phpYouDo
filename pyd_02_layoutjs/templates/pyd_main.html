@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>phpYouDo jQuery-layout example</title>
+	%PYD_STYLES%
+</head>
+<body>
+%PYD_SCRIPTS%
+<script type="text/javascript">
+	function setUp(name, data) {
+		var template = $("#" + name + "Template").html();
+		var position = null;
+
+		if (name.indexOf("north") != -1) {
+			position = "north";
+		} else if (name.indexOf("east") != -1) {
+			position = "east";
+		} else if (name.indexOf("south") != -1) {
+			position = "south";
+		} else if (name.indexOf("west") != -1) {
+			position = "west";
+		} else {
+			position = "center";
+		}
+
+		$(".ui-layout-" + position).append("<div id='" + name + "'></div>");
+		$("#" + name).html(_.template(template, { items: data }));
+	}
+</script>
+
+<div class="pane ui-layout-center"></div>
+<div class="pane ui-layout-north"></div>
+<div class="pane ui-layout-south"></div>
+<div class="pane ui-layout-east"></div>
+<div class="pane ui-layout-west"></div>
+%PYD_CONTENT%
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<div class="row">
+	<div class="col-md-12">
+		<table class="table">
+			<thead>
+				<!-- Header columns -->
+				<tr>
+				<%
+					var obj = items[0];
+					for (var key in obj) {
+						var val=obj[key];
+						%>
+						<th class="<%= key %>"><%= key %></th>
+						<%
+					}
+				%>
+				</tr>
+			</thead>
+
+			<!-- Data columns -->
+			<tbody>
+			<%
+				_.each(items, function(i) {
+					%>
+						<tr>
+					<%
+					for (var key in i) {
+						var val=i[key];
+						%>
+						<td class="<%= key %>"><%= val %></td>
+						<%
+					}
+					%>
+						</tr>
+					<%
+				});
+			%>
+			</tbody>
+		</table>
+	</div>
+</div>
