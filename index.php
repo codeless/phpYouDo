@@ -2,7 +2,6 @@
 
 /**
  * phpYouDo (PYD) - Mini Webapp engine
- * @link http://www.codeless.at/phpyoudo Infos about phpYouDo
  * @author Manuel H <more@codeless.at>
  * Creation date: 2013-03-28
  */

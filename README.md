@@ -1,11 +1,13 @@
 With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) gets standardized, clearly arranged and last but not least: mainly outsourced to the client.
 
+[Online Demo](http://www.codeless.at/phpyoudo)
+
 
 Requirements
 ============
 
-| Server: PHP with PDO
-| Client: A JavaScript enabled browser
+Server: PHP with PDO
+Client: A JavaScript enabled browser
 
 
 FAQ
