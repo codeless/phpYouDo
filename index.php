@@ -683,25 +683,29 @@ function declareDefaultTemplates() {
 		<%
 			if (typeof activeApplication === "undefined") {
 				%>
-				<h1>Welcome to phpYouDo</h1>
+				<br>
+				<img align="right" src="http://www.codeless.at/phpyoudo.png"/>
+				<h1>Welcome to <b>phpYouDo</b></h1>
+				<br>
 				<%
 			}
 		%>
 		<h2>Please choose an application:</h2>
-		<ul class="button-group">
-			<%
-				_.each(items, function(i) {
-					%>
-						<li>
-							<a href="?application=<%= i %>"
-								class="active button">
-								<%= i %>
-							</a>
-						</li>
-					<%
-				});
-			%>
-		</ul>
+		<br>
+		<%
+			_.each(items, function(i) {
+				%>
+					<div class="panel">
+						<h3><%= i %></h3>
+						<pre>Contents of readme.md</pre>
+						<a href="?application=<%= i %>"
+							class="button">
+							Start <%= i %> &raquo;
+						</a>
+					</div>
+				<%
+			});
+		%>
 	</div>
 </div>
 EOT;
