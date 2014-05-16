@@ -11,7 +11,7 @@ error_reporting(E_ALL | E_STRICT);
 ini_set("display_errors", 1);
 
 # Get a list of all PYD applications
-$applications = getApplicationNames();
+$applications = getApplications();
 
 # Collect and partially validate user input
 $input = getInput();
@@ -41,7 +41,8 @@ session_start();
 session_regenerate_id();
 
 # If mode is passon, an application must be set
-if (isset($input['mode']) && $input['mode'] == 'passon' &&
+if (	isset($input['mode']) &&
+	$input['mode'] == 'passon' &&
 	$input['application'])
 {
 	passon($applications, $tplPath . DIRECTORY_SEPARATOR .
@@ -50,7 +51,8 @@ if (isset($input['mode']) && $input['mode'] == 'passon' &&
 	$reports = getReportNames();
 	passon($reports, $tplPath . DIRECTORY_SEPARATOR . 'pyd_reports.php');
 
-	if (isset($input['report']) && $input['report'] &&
+	if (	isset($input['report']) &&
+		$input['report'] &&
 		in_array($input['report'], $reports))
 	{
 		processReport();
@@ -152,10 +154,15 @@ else {
 	# Export application name
 	if ($input['application']) {
 		exportVariable('activeApplication', $input['application']);
-	}
 
-	# Attach applications as JSON data to document
-	attachToDocument('applications', $applications);
+		# Attach applications as JSON data to document
+		attachToDocument('applicationsQuicklaunch', $applications);
+	} else {
+		# No application has been chosen yet;
+		# get applications details and export them
+		$applicationsDetails = getApplicationsDetails();
+		attachToDocument('applicationsOverview', $applicationsDetails);
+	}
 
 	if ($input['application']) {
 		$reports = getReportNames();
@@ -171,27 +178,55 @@ else {
 }
 
 
-/*
-
-Function: getApplicationNames
-
-A PYD-application is defined by a folder which starts
-with the string "pyd_" (prefix). Everything after the
-prefix is supposed to be the applications name.
-
-*/
-function getApplicationNames() {
+/**
+ * A PYD-application is defined by a folder which starts
+ * with the string "pyd_" (prefix). Everything after the
+ * prefix is supposed to be the applications name.
+ *
+ * @return array Names of applications
+ */
+function getApplications() {
 	$applicationDirectories = glob('pyd_*', GLOB_ONLYDIR);
 	$applications = preg_replace('/^pyd_/', '', $applicationDirectories);
 	return $applications;
 }
 
 
-/*
+/**
+ * @return table Application names as key, application description as value
+ */
+function getApplicationsDetails() {
+	global $applications;
 
-Function: readConfigFile
+	$details = array();
 
-*/
+	foreach ($applications as $a) {
+		# Set default description
+		$desc = 'No description available';
+
+		# Check for a README-file in the app's directory:
+		$readmes = glob('pyd_' . $a . DIRECTORY_SEPARATOR . 'README*');
+
+		# Extract app description
+		if ($readmes && isset($readmes[0])) {
+			$desc = file_get_contents(
+				$readmes[0],	# file
+				false,		# use_include_path
+				null,		# context
+				0,		# offset
+				250);		# maxlen
+		}
+
+		$details[$a] = $desc;
+	}
+
+	return $details;
+}
+
+
+/**
+ * @return table Configuration
+ */
 function readConfigFile($filename) {
 	$config = null;
 
@@ -246,18 +281,12 @@ function exportVariable($name, $value, $setUpTemplate=false) {
 }
 
 
-/*
-
-Function: attachToDocument
-
-Parameters:
-
-	$name -
-	$data -
-	$template -
-	$affectedRows -
-
-*/
+/**
+ * @param string $name
+ * @param array $data
+ * @param string|null $template
+ * @param int|null $affectedRows
+ */
 function attachToDocument($name, $data, $template=null, $affectedRows=null) {
 	global $defaultTemplates;
 
@@ -284,11 +313,9 @@ function attachToDocument($name, $data, $template=null, $affectedRows=null) {
 }
 
 
-/*
-
-Function: getInput
-
-*/
+/**
+ * @return table Filtered user input from the GET-method
+ */
 function getInput() {
 	global $applications;
 	return filter_input_array(
@@ -296,7 +323,8 @@ function getInput() {
 		array( 	'application' => array(
 				'filter' => FILTER_VALIDATE_REGEXP,
 				'options' => array(
-					'regexp' => '/(' . implode('|', $applications) . ')/'
+					'regexp' => '/(' . implode('|',
+						$applications) . ')/'
 				)
 			),
 		 	'mode' => array(
@@ -677,35 +705,46 @@ function declareDefaultTemplates() {
 
 	# Default templates
 	$defaultTemplates = array();
-	$defaultTemplates['applications'] =<<< EOT
+	$defaultTemplates['applicationsOverview'] =<<< EOT
 <div class="row">
 	<div class="large-12 columns">
-		<%
-			if (typeof activeApplication === "undefined") {
-				%>
-				<br>
-				<img align="right" src="http://www.codeless.at/phpyoudo.png"/>
-				<h1>Welcome to <b>phpYouDo</b></h1>
-				<br>
-				<%
-			}
-		%>
+		<br>
+		<img align="right" src="http://www.codeless.at/phpyoudo.png"/>
+		<h1>Welcome to <b><i>phpYouDo</i></b></h1>
+		<br>
 		<h2>Please choose an application:</h2>
 		<br>
 		<%
-			_.each(items, function(i) {
+			_.each(items, function(description, name) {
 				%>
 					<div class="panel">
-						<h3><%= i %></h3>
-						<pre>Contents of readme.md</pre>
-						<a href="?application=<%= i %>"
+						<h3><%= name %></h3>
+						<pre><%= description %></pre>
+						<br>
+						<a href="?application=<%= name %>"
 							class="button">
-							Start <%= i %> &raquo;
+							Start <%= name %> &raquo;
 						</a>
 					</div>
 				<%
 			});
 		%>
+	</div>
+</div>
+EOT;
+	$defaultTemplates['applicationsQuicklaunch'] =<<< EOT
+<div class="row">
+	<div class="large-12 columns">
+		<a class="tiny button" href="?">&laquo; Return to the overview</a>
+		<a href="#" data-dropdown="applications-dropdown"
+			class="tiny secondary button dropdown">Choose an application</a><br>
+		<ul id="applications-dropdown" data-dropdown-content class="f-dropdown">
+			<%
+				_.each(items, function(i) {%>
+					<li><a href="?application=<%= i %>"><%= i %></a></li><%
+				});
+			%>
+		</ul>
 	</div>
 </div>
 EOT;
@@ -805,6 +844,10 @@ EOT;
 	$defaultTemplates['scripts'] =<<< EOT
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation.min.js"></script>
+<script type="text/javascript">
+	$(function() { $(document).foundation(); });
+</script>
 EOT;
 
 	# Globalize default templates
