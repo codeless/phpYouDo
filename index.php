@@ -26,9 +26,13 @@ if ($input['application']) {
 	$appPath	= 'pyd_' . $input['application'];
 	$tplPath	= $appPath . DIRECTORY_SEPARATOR . 'templates';
 	$appConfigFile	= $appPath . DIRECTORY_SEPARATOR . 'pyd.ini';
-	$appConfig	= (is_file($appConfigFile)) ? readConfigFile($appConfigFile) : null;
-	$sessionName	= (isset($appConfig) && isset($appConfig['sessionName']))
-				? $appConfig['sessionName'] : $input['application'];
+	$appConfig	= (is_file($appConfigFile))
+				? readConfigFile($appConfigFile)
+				: null;
+	$sessionName	= (isset($appConfig) &&
+				isset($appConfig['sessionName']))
+				? $appConfig['sessionName']
+				: $input['application'];
 	session_name($sessionName);
 }
 
@@ -37,13 +41,18 @@ session_start();
 session_regenerate_id();
 
 # If mode is passon, an application must be set
-if (isset($input['mode']) && $input['mode'] == 'passon' && $input['application']) {
-	passon($applications, $tplPath . DIRECTORY_SEPARATOR . 'pyd_applications.php');
+if (isset($input['mode']) && $input['mode'] == 'passon' &&
+	$input['application'])
+{
+	passon($applications, $tplPath . DIRECTORY_SEPARATOR .
+		'pyd_applications.php');
 
 	$reports = getReportNames();
 	passon($reports, $tplPath . DIRECTORY_SEPARATOR . 'pyd_reports.php');
 
-	if (isset($input['report']) && $input['report'] && in_array($input['report'], $reports)) {
+	if (isset($input['report']) && $input['report'] &&
+		in_array($input['report'], $reports))
+	{
 		processReport();
 	}
 }
@@ -53,7 +62,8 @@ else {
 		# Compile document title
 		$documentTitle = ucwords($input['application']);
 		if (isset($input['report'])) {
-			$documentTitle .= ' &raquo; ' . ucwords($input['report']);
+			$documentTitle .= ' &raquo; ' .
+				ucwords($input['report']);
 		}
 	} else {
 		# Set defaults
@@ -72,7 +82,8 @@ else {
 		# Check if those default templates do exist
 		# for the chosen application:
 		foreach ($templates as $t) {
-			$templateFile =  $appPath . '/templates/pyd_' . $t . '.html';
+			$templateFile =  $appPath . '/templates/pyd_' .
+				$t . '.html';
 			if (is_file($templateFile)) {
 				$defaultTemplates[$t] = file_get_contents($templateFile);
 			}
@@ -138,11 +149,15 @@ else {
 	echo $documentHeader;
 	unset($documentHeader);
 
+	# Export application name
+	if ($input['application']) {
+		exportVariable('activeApplication', $input['application']);
+	}
+
 	# Attach applications as JSON data to document
 	attachToDocument('applications', $applications);
 
 	if ($input['application']) {
-		exportVariable('activeApplication', $input['application']);
 		$reports = getReportNames();
 		attachToDocument('reports', $reports);
 
@@ -381,8 +396,10 @@ function processReport($report=null) {
 			# Compile Data-Source-Name (DSN)
 			if ($databaseConfiguration['type'] == 'sqlite') {
 				$dbfile	= dirname(realpath($databaseConfigurationFile)) .
-					DIRECTORY_SEPARATOR . $databaseConfiguration['database'];
-				$dsn	= $databaseConfiguration['type'] . ':' . $dbfile;
+					DIRECTORY_SEPARATOR .
+					$databaseConfiguration['database'];
+				$dsn	= $databaseConfiguration['type'] .
+						':' . $dbfile;
 				$user	= $password = null;
 			} else {
 				$dsn = 	$databaseConfiguration['type'] .
@@ -392,7 +409,8 @@ function processReport($report=null) {
 					$databaseConfiguration['host'] .
 					';charset=' .
 					(isset($databaseConfiguration['charset'])
-						? $databaseConfiguration['charset'] : 'utf8');
+						? $databaseConfiguration['charset']
+						: 'utf8');
 				$user = $databaseConfiguration['username'];
 				$password = $databaseConfiguration['password'];
 			}
@@ -645,7 +663,11 @@ function processReport($report=null) {
 			}
 
 			# Print template and results:
-			attachToDocument($queryName, $results, $template, $affectedRows);
+			attachToDocument(
+				$queryName,
+				$results,
+				$template,
+				$affectedRows);
 		}
 	}
 }

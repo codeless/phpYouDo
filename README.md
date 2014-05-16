@@ -15,12 +15,19 @@ FAQ
 ===
 
 __Q: Can PYD handle multiple databases in one application?__
+
 A: Yes, see the examples.
 
 __Q: What sorts of databases PYD can handle?__
+
 A: Only relational ones. PYD uses [PHP Data Objects](http://php.net/pdo) to access databases.
 
+__Q: phpYouDo per default uses a lot of JavaScript; can phpYouDo be configured to work without JavaScript?__
+
+A: Yes, by using PHP templates and an individual PHP template engine. Please the the nojs-example.
+
 __Q: The examples use SQLite databases only. How to use MySQL?__
+
 A: Example db.ini.php for MySQL:
 
 ~~~
@@ -45,6 +52,7 @@ Alternatives to PYD
 ===================
 
 * [Dadabik](http://www.dadabik.org/)
+* [VFront](http://www.vfront.org/)
 * [PHPLens](http://phplens.com/)
 * [SynApp2](http://www.synapp2.org/)
 
