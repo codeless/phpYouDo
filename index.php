@@ -3,6 +3,7 @@
 /**
  * phpYouDo (PYD) - Mini Webapp engine
  * @author Manuel H <more@codeless.at>
+ * @license http://creativecommons.org/licenses/by/4.0/ Creative Commons Attribution 4.0 International License
  * Creation date: 2013-03-28
  */
 
