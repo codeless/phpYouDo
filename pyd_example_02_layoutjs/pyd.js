@@ -7,4 +7,7 @@ $(function() {
 		west__maxSize: 600,
 		center__minWidth: 300
 	});
+
+	// Run foundation
+	$(document).foundation();
 });
