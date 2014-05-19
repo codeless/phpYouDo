@@ -2,7 +2,7 @@
 
 [get_choose]
 sql="""
-SELECT	'<a href=?application=01_intro&report=get&lorem='
+SELECT	'<a href=?application=example_01_intro&report=get&lorem='
 		|| lorem
 		|| '>'
 		|| ipsum

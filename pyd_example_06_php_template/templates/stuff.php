@@ -10,5 +10,6 @@ foreach ($data as $d) {
 attachToDocument('stuff', $data);
 
 # Export data with individual template:
-$template = file_get_contents('pyd_06_php_template/templates/indistuff.html');
+$template = file_get_contents(
+	'pyd_example_06_php_template/templates/indistuff.html');
 attachToDocument('indistuff', $data, $template);
