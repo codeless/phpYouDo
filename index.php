@@ -370,7 +370,10 @@ function processReport($report=null) {
 	foreach ($reportConfiguration as $sectionName => $c) {
 		# Load subreport?
 		$matches = array();
-		if (preg_match('/^report ([a-z0-9_]+)( .*)?/', $sectionName, $matches)) {
+		if (preg_match('/^report ([a-z0-9_]+)( .*)?/',
+			$sectionName,
+			$matches))
+		{
 			$subreport = $matches[1];
 			processReport($subreport);
 			continue;	# continue with next section
@@ -380,12 +383,18 @@ function processReport($report=null) {
 		$logPrefix	= null;
 
 		if ($log) {
-			$logPrefix = $input['application'] . '/' . $report . '/' . $sectionName;
+			$logPrefix = $input['application'] .
+				DIRECTORY_SEPARATOR .
+				$report .
+				DIRECTORY_SEPARATOR .
+				$sectionName;
 		}
 
 		if ($log && $log == 1) {
-			querylog('GET params: ' . implode(',', array_keys($_GET)), $logPrefix);
-			querylog('POST params: ' . implode(',', array_keys($_POST)), $logPrefix);
+			querylog('GET params: ' . implode(',',
+				array_keys($_GET)), $logPrefix);
+			querylog('POST params: ' . implode(',',
+				array_keys($_POST)), $logPrefix);
 		}
 
 		$databaseConfigDir = $appPath . '/databases/';
@@ -394,11 +403,16 @@ function processReport($report=null) {
 			$queryName = $sectionName;
 
 			if (!isset($c['database'])) {
-				$databaseFiles = glob($databaseConfigDir . '*.ini.php');
+				$databaseFiles = glob($databaseConfigDir .
+					'*.ini.php');
 
 				if (isset($databaseFiles[0])) {
-					$defaultDBConfig = basename($databaseFiles[0]);
-					$databaseID = str_replace('.ini.php', '', $defaultDBConfig);
+					$defaultDBConfig = basename(
+						$databaseFiles[0]);
+					$databaseID = str_replace(
+						'.ini.php',
+						'',
+						$defaultDBConfig);
 				}
 				else {
 					trigger_error('No database set to run query on',
@@ -523,29 +537,38 @@ function processReport($report=null) {
 			# Collect parameters by using a regex:
 			$matches = array();
 			$hits = preg_match_all(
-				'/(:|#|\$)([A-Za-z0-9_]+)\b(\*)?/',
+				#'/(:|#|\$)([A-Za-z0-9_]+)\b(\*)?/',
+				'/(:|#|\$)([A-Za-z0-9_]+)\b\(?([a-zA-Z_]+)?\)?(\*)?/',
 				$c['sql'],
 				$matches);
 
 			if ($hits) {
 				$sources		= $matches[1];
 				$parametersToBind	= $matches[2];
-				$obligatory		= $matches[3];
+				$filters		= $matches[3];
+				$obligatory		= $matches[4];
 				$bindList		= array();
 
-				foreach ($parametersToBind as $i => $paramName) {
+				foreach ($parametersToBind as
+						$i => $paramName)
+				{
+					# Set filter
+					$filter = (!$filters[$i])
+						? FILTER_SANITIZE_STRING
+						: constant($filters[$i]);
+
 					if ($sources[$i] == ':') {
 						$method = 'get';
 						$value = filter_input(
 							INPUT_GET,
 							$paramName,
-							FILTER_SANITIZE_STRING);
+							$filter);
 					} else if ($sources[$i] == '#') {
 						$method = 'post';
 						$value = filter_input(
 							INPUT_POST,
 							$paramName,
-							FILTER_SANITIZE_STRING);
+							$filter);
 					} else if ($sources[$i] == '$') {
 						$method = 'session';
 						$value = (isset($_SESSION[$paramName]))
