@@ -3,7 +3,8 @@
 /**
  * phpYouDo (PYD) - Mini Webapp engine
  * @author Manuel H <more@codeless.at>
- * @license http://creativecommons.org/licenses/by/4.0/ Creative Commons Attribution 4.0 International License
+ * @license http://creativecommons.org/licenses/by/4.0/
+ *	Creative Commons Attribution 4.0 International License
  * Creation date: 2013-03-28
  */
 
@@ -537,8 +538,7 @@ function processReport($report=null) {
 			# Collect parameters by using a regex:
 			$matches = array();
 			$hits = preg_match_all(
-				#'/(:|#|\$)([A-Za-z0-9_]+)\b(\*)?/',
-				'/(:|#|\$)([A-Za-z0-9_]+)\b\(?([a-zA-Z_]+)?\)?(\*)?/',
+				'/(:|#|\$)([A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?/',
 				$c['sql'],
 				$matches);
 

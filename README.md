@@ -23,7 +23,7 @@ Features
 * Easily integration of JavaScript template engines
 * Load removal from the server when using JavaScript
 * Can manage multiple applications
-* phpYouDo as a library consists of only one file; additional scripts and files (JavaScript and CSS) are integrated via Content Delivery Networks (CDN)
+* Lightweight library: phpYouDo as a library consists of only one file; additional scripts and files (JavaScript and CSS) are integrated via Content Delivery Networks (CDN)
 
 
 Requirements

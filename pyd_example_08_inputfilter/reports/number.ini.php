@@ -8,7 +8,7 @@ Click the links below and see the results.' AS Description
 """
  
 [email]
-sql="SELECT :number(FILTER_SANITIZE_NUMBER_INT)* AS filtered_integer"
+sql="SELECT :number[FILTER_SANITIZE_NUMBER_INT]* AS filtered_integer"
 
 [links]
 sql="""
