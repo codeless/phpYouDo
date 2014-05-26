@@ -391,6 +391,26 @@ function processReport($report=null) {
 
 	# Extract databases which are used by the queries
 	foreach ($reportConfiguration as $sectionName => $c) {
+		$log		= (isset($c['log'])) ? (int) $c['log'] : 0;
+		$logPrefix	= ($log)
+			? $logPrefix = $input['application'] .
+				DIRECTORY_SEPARATOR .
+				$report .
+				DIRECTORY_SEPARATOR .
+				$sectionName
+			: null;
+
+		# Pre-evaluate an expression?
+		if (isset($c['pre'])) {
+			if (!parseExpression($c['pre'])) {
+				if ($log && $log == 1) {
+					querylog('Pre-test not passed',
+						$logPrefix);
+				}
+				continue;
+			}
+		}
+
 		# Load subreport?
 		$matches = array();
 		if (preg_match('/^report ([a-z0-9_]+)( .*)?/',
@@ -400,17 +420,6 @@ function processReport($report=null) {
 			$subreport = $matches[1];
 			processReport($subreport);
 			continue;	# continue with next section
-		}
-
-		$log		= (isset($c['log'])) ? (int) $c['log'] : 0;
-		$logPrefix	= null;
-
-		if ($log) {
-			$logPrefix = $input['application'] .
-				DIRECTORY_SEPARATOR .
-				$report .
-				DIRECTORY_SEPARATOR .
-				$sectionName;
 		}
 
 		if ($log && $log == 1) {
@@ -512,7 +521,8 @@ function processReport($report=null) {
 		}
 		else {
 			# Compile path to query
-			$queryFile = $appPath . '/queries/' . $c['query'] . '.ini.php';
+			$queryFile = $appPath . '/queries/' . $c['query'] .
+				'.ini.php';
 
 			# Read query
 			$queryConfig = readConfigFile($queryFile);
@@ -549,7 +559,8 @@ function processReport($report=null) {
 			# Bind parameters from SESSION
 			if (isset($c['queryParametersFromSession'])) {
 				# Loop through parameters
-				foreach ($c['queryParametersFromSession'] as $p) {
+				foreach ($c['queryParametersFromSession'] as $p)
+				{
 					# Add parameter:
 					$parameters[$p] = (isset($_SESSION[$p]))
 						? $_SESSION[$p]
@@ -557,89 +568,33 @@ function processReport($report=null) {
 				}
 			}
 		} else if (isset($c['sql'])) {	# New method
-			# Collect parameters by using a regex:
-			$matches = array();
-			$hits = preg_match_all(
-				'/(:|#|\$)([A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?/',
-				$c['sql'],
-				$matches);
-
-			if ($hits) {
-				$sources		= $matches[1];
-				$parametersToBind	= $matches[2];
-				$filters		= $matches[3];
-				$obligatory		= $matches[4];
-				$bindList		= array();
-
-				foreach ($parametersToBind as
-						$i => $paramName)
-				{
-					# Set filter
-					$filter = (!$filters[$i])
-						? FILTER_SANITIZE_STRING
-						: constant($filters[$i]);
-
-					if ($sources[$i] == ':') {
-						$method = 'get';
-						$value = filter_input(
-							INPUT_GET,
-							$paramName,
-							$filter);
-					} else if ($sources[$i] == '#') {
-						$method = 'post';
-						$value = filter_input(
-							INPUT_POST,
-							$paramName,
-							$filter);
-					} else if ($sources[$i] == '$') {
-						$method = 'session';
-						$value = (isset($_SESSION[$paramName]))
-							? $_SESSION[$paramName]
-							: null;
-					}
-
-					# Compile ID of param
-					$paramID = $method . '_' . $paramName;
-
-					# Save parameter
-					$parameters[$paramID] = $value;
-
-					# Obligatory param?
-					if ($obligatory[$i] == '*') {
-						if (!isset($c['obligatoryParameters'])) {
-							$c['obligatoryParameters'] = array();
-						}
-
-						$c['obligatoryParameters'][] = $paramID;
-					}
-
-					$bindList[] = ':' . $paramID;
-				}
-
-				# Make obligatory params unique
-				if (isset($c['obligatoryParameters'])) {
-					$c['obligatoryParameters'] = array_unique($c['obligatoryParameters']);
-				}
-
-				# Fix SQL
-				$query = str_replace($matches[0], $bindList, $c['sql']);
-			}
+			list($parameters, $query, $c['obligatoryParameters']) =
+				extractVariables($c['sql']);
 		}
 
 		if ($log && $log == 1) {
-			querylog('SQL params: ' . implode(',', array_keys($parameters)), $logPrefix);
-			querylog('SQL param values: ' . implode(',', array_values($parameters)), $logPrefix);
+			querylog('SQL params: ' . implode(',',
+				array_keys($parameters)), $logPrefix);
+			querylog('SQL param values: ' . implode(',',
+				array_values($parameters)), $logPrefix);
 		}
 
 		if (isset($c['obligatoryParameters'])) {
-			if ($log && $log == 1) { querylog('Obligatory params: ' . implode(',', $c['obligatoryParameters']), $logPrefix); }
+			if ($log && $log == 1) {
+				querylog('Obligatory params: ' .
+					implode(',',
+					$c['obligatoryParameters']),
+					$logPrefix);
+			}
 			$conditionsMet = true;
 
 			foreach ($c['obligatoryParameters'] as $p) {
 				# Obligatory parameters can either
 				# be used inside the query or only
 				# inside the GET or POST data
-				if (!isset($parameters[$p]) && !isset($_GET[$p]) && !isset($_POST[$p]))
+				if (	!isset($parameters[$p]) &&
+					!isset($_GET[$p]) &&
+					!isset($_POST[$p]))
 				{
 					$conditionsMet = false;
 					break;
@@ -647,11 +602,17 @@ function processReport($report=null) {
 			}
 
 			if (!$conditionsMet) {
-				if ($log && $log == 1) { querylog('Missing obligatory params...', $logPrefix); }
+				if ($log && $log == 1) {
+					querylog('Missing obligatory params...',
+						$logPrefix);
+				}
 				continue; # continue with next query
 			}
 		} else {
-			if ($log && $log == 1) { querylog('No obligatory params', $logPrefix); }
+			if ($log && $log == 1) {
+				querylog('No obligatory params',
+					$logPrefix);
+			}
 		}
 
 		# Prepare query
@@ -928,6 +889,116 @@ function pydlog($msg, $prefix=null) {
 
 function querylog($msg, $prefix=null) {
 	pydlog($msg, $prefix);
+}
+
+
+/**
+ * Parses the passed expression and replaces references to GET, POST and
+ * SESSION variables with their actual values.
+ *
+ * @param string $expr The expression to parse
+ *
+ * @return string The expression with the integrated variable values
+ */
+function parseExpression($expr) {
+	list($variables, $fixedExpr) = extractVariables($expr, ':');
+
+	# Convert expression to PHP code by injecting the values
+	$phpCode = str_replace(
+		array_keys($variables),
+		array_values($variables),
+		$fixedExpr);
+
+	# Add an semicolon; just to get sure
+	# (Multiple semicolons won't throw an error):
+	$phpCode .= ';';
+
+	return (eval($phpCode));
+}
+
+
+/**
+ * Parses the passed expression and extracts references to GET, POST and
+ * SESSION variables.
+ *
+ * @param string $expr The expression to parse
+ * @param string $varPrefix The prefix to attach to extracted variable
+ *	names; defaults to null
+ *
+ * @return array The first array-entry holds a table with the variable's
+ *	name as key and its value, while the second array-entry holds
+ *	the expression in a fixed syntax; that is, the original variable
+ *	definitions have been replaced with internal ones.
+ *	The third array-entry holds an array of all obligatory params.
+ */
+function extractVariables($expr, $varPrefix=null) {
+	$fixedExpr = $expr;
+	$matches = $vars = $obligatoryParams = array();
+	$hits = preg_match_all(
+		'/(:|#|\$)([A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?/',
+		$expr,
+		$matches);
+
+	if ($hits) {
+		# Loop through matches and get values
+		$sources		= $matches[1];
+		$parametersToBind	= $matches[2];
+		$filters		= $matches[3];
+		$obligatory		= $matches[4];
+		$bindList		= array();
+
+		foreach ($parametersToBind as $i => $paramName) {
+			# Set filter
+			$filter = (!$filters[$i])
+				? FILTER_SANITIZE_STRING
+				: constant($filters[$i]);
+
+			if ($sources[$i] == ':') {
+				$method = 'get';
+				$value = filter_input(
+					INPUT_GET,
+					$paramName,
+					$filter);
+			} else if ($sources[$i] == '#') {
+				$method = 'post';
+				$value = filter_input(
+					INPUT_POST,
+					$paramName,
+					$filter);
+			} else if ($sources[$i] == '$') {
+				$method = 'session';
+				$value = (isset($_SESSION[$paramName]))
+					? $_SESSION[$paramName]
+					: null;
+			}
+
+			# Compile ID of param
+			$paramID = $method . '_' . $paramName;
+
+			# Save parameter
+			$vars[$varPrefix . $paramID] = $value;
+
+			# Obligatory param?
+			if ($obligatory[$i] == '*') {
+				$obligatoryParams[] = $paramID;
+			}
+
+			$bindList[] = ':' . $paramID;
+		}
+
+		# Make obligatory params unique
+		$obligatoryParams = (isset($obligatoryParams[0]))
+			? array_unique($obligatoryParams)
+			: null;
+
+		# Fix Expression
+		$fixedExpr = str_replace(
+			$matches[0],
+			$bindList,
+			$expr);
+	}
+
+	return array($vars, $fixedExpr, $obligatoryParams);
 }
 
 
