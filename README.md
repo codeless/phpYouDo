@@ -71,9 +71,10 @@ Alternatives to phpYouDo
 ========================
 
 * [Dadabik](http://www.dadabik.org/)
-* [VFront](http://www.vfront.org/)
+* [DbToRia](http://www.dbtoria.org/)
 * [PHPLens](http://phplens.com/)
 * [SynApp2](http://www.synapp2.org/)
+* [VFront](http://www.vfront.org/)
 
 
 Glossary and abbreviations

@@ -89,14 +89,17 @@ else {
 			$templateFile =  $appPath . '/templates/pyd_' .
 				$t . '.html';
 			if (is_file($templateFile)) {
-				$defaultTemplates[$t] = file_get_contents($templateFile);
+				$defaultTemplates[$t] = file_get_contents(
+					$templateFile);
 			}
 		}
 	}
 
 	# Get main template
 	$document = $defaultTemplates['main'];
-	list($documentHeader, $documentFooter) = explode('%PYD_CONTENT%', $document);
+	list($documentHeader, $documentFooter) = explode(
+		'%PYD_CONTENT%',
+		$document);
 
 	if ($input['application']) {
 		# Compile paths to default CSS and JS files
@@ -114,13 +117,18 @@ else {
 					# Inject stylesheet to header
 					$documentHeader = preg_replace(
 						'/(<\/head>)/i',
-						'<link rel="stylesheet" href="' . $path . '?v=' . filemtime($path) . '">' . PHP_EOL . '\1',
+						'<link rel="stylesheet" href="' .
+						$path . '?v=' .
+						filemtime($path) . '">' .
+						PHP_EOL . '\1',
 						$documentHeader);
 				}
 				else if ($type == 'js') {
 					# Add script to footer
 					$documentFooter =
-						'<script src="' . $path . '?v=' . filemtime($path) . '"></script>' . PHP_EOL .
+						'<script src="' . $path .
+						'?v=' . filemtime($path) .
+						'"></script>' . PHP_EOL .
 						$documentFooter;
 				}
 			}
@@ -132,20 +140,24 @@ else {
 
 		# Merge custom or default styles and scripts
 		if (is_file($customStyles)) {
-			$defaultTemplates['styles'] = file_get_contents($customStyles);
+			$defaultTemplates['styles'] = file_get_contents(
+				$customStyles);
 		}
 		if (is_file($customScripts)) {
-			$defaultTemplates['scripts'] = file_get_contents($customScripts);
+			$defaultTemplates['scripts'] = file_get_contents(
+				$customScripts);
 		}
 		$documentHeader = str_replace(
 			array('%PYD_STYLES%', '%PYD_SCRIPTS%'),
-			array($defaultTemplates['styles'], $defaultTemplates['scripts']),
+			array($defaultTemplates['styles'],
+				$defaultTemplates['scripts']),
 			$documentHeader);
 	} else {
 		# Merge default styles and scripts into header
 		$documentHeader = str_replace(
 			array('%PYD_STYLES%', '%PYD_SCRIPTS%'),
-			array($defaultTemplates['styles'], $defaultTemplates['scripts']),
+			array($defaultTemplates['styles'],
+				$defaultTemplates['scripts']),
 			$documentHeader);
 	}
 
@@ -167,10 +179,20 @@ else {
 	}
 
 	if ($input['application']) {
+		# Get reports of current application
 		$reports = getReportNames();
+
+		# Validate selected report
+		$activeReport = (isset($input['report']) &&
+			$input['report'] &&
+			in_array($input['report'], $reports))
+			? $input['report']
+			: null;
+		exportVariable('activeReport', $activeReport);
+
 		attachToDocument('reports', $reports);
 
-		if (isset($input['report']) && $input['report'] && in_array($input['report'], $reports)) {
+		if ($activeReport) {
 			processReport();
 		}
 	}
