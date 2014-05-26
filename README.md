@@ -57,6 +57,34 @@ username=myuser
 password=mypwd
 ~~~
 
+__Q: How can SQL statements be debugged?__
+
+A: The execution of each section inside a report can be logged by adding the key _log_ with a value of 1 or 2: 1 means a full log, while 2 logs only the time spent on the execution of the query. The log-entries are published in your PHP error-logfile.
+
+Example report:
+
+~~~
+;...
+
+[get\_required]
+; Only gets executed when the lorem parameter is set:
+sql="SELECT * FROM lipsum WHERE lorem=:lorem*"
+log=1
+
+;...
+~~~
+
+Example log-entries:
+
+~~~
+[26-May-2014 14:02:42 UTC] PYD example_01_intro\get\get_required GET params: application,report,lorem
+[26-May-2014 14:02:42 UTC] PYD example_01_intro\get\get_required POST params:
+[26-May-2014 14:02:42 UTC] PYD example_01_intro\get\get_required SQL params: get_lorem
+[26-May-2014 14:02:42 UTC] PYD example_01_intro\get\get_required SQL param values: 3
+[26-May-2014 14:02:42 UTC] PYD example_01_intro\get\get_required Obligatory params: get_lorem
+[26-May-2014 14:02:42 UTC] PYD example_01_intro\get\get_required Seconds needed for binding params and executing query: 0.00011682510375977
+~~~
+
 
 Best practices
 ==============
