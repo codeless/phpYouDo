@@ -402,7 +402,10 @@ function processReport($report=null) {
 
 		# Pre-evaluate an expression?
 		if (isset($c['pre'])) {
-			if (!parseExpression($c['pre'])) {
+			if (	!parseExpression($c['pre'],
+				$log,
+				$logPrefix))
+			{
 				if ($log && $log == 1) {
 					querylog('Pre-test not passed',
 						$logPrefix);
@@ -900,7 +903,7 @@ function querylog($msg, $prefix=null) {
  *
  * @return string The expression with the integrated variable values
  */
-function parseExpression($expr) {
+function parseExpression($expr, $log, $logPrefix) {
 	list($variables, $fixedExpr) = extractVariables($expr, ':');
 
 	# Convert expression to PHP code by injecting the values
@@ -909,9 +912,14 @@ function parseExpression($expr) {
 		array_values($variables),
 		$fixedExpr);
 
-	# Add an semicolon; just to get sure
-	# (Multiple semicolons won't throw an error):
-	$phpCode .= ';';
+	# And some syntax:
+	$phpCode = 'return (' . $phpCode . ') ? 1 : 0;';
+
+	# Log code
+	if ($log && $log == 1) {
+		querylog('Pre-testcode to evaluate: ' . $phpCode,
+			$logPrefix);
+	}
 
 	return (eval($phpCode));
 }
