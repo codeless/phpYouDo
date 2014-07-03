@@ -1,16 +1,8 @@
 With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP gets standardized, clearly arranged and last but not least: mainly outsourced to the client.
 
-**When to use phpYouDo?**
-* The focus of your application is on the database
-* You plan to integrate multiple developers with different skills (PHP Dev, Database Dev, Design Dev)
-* Your fellow developers are PHP beginners but might be Database professionals
-* Your business logic is in the database
-* You need an administrative gui &mdash; quick!
-* You want no "coded application", but a transparent one
-
 [Demo](http://www.codeless.at/phpyoudo)
 
-[Intro Documentation](http://www.codeless.at/phpyoudo/doc_intro)
+[Intro documentation](http://www.codeless.at/phpyoudo/doc_intro)
 
 
 About
@@ -35,6 +27,17 @@ Features
 * Load removal from the server when using JavaScript
 * Can manage multiple applications
 * Lightweight library: phpYouDo as a library consists of only one file; additional scripts and files (JavaScript and CSS) are integrated via Content Delivery Networks (CDN)
+
+
+When to use phpYouDo?
+=====================
+
+* The focus of your application is on the database
+* You plan to integrate multiple developers with different skills (PHP Dev, Database Dev, Design Dev)
+* Your fellow developers are PHP beginners but might be Database professionals
+* Your business logic is in the database
+* You need an administrative gui &mdash; quick!
+* You want no "coded application", but a transparent one
 
 
 Requirements
