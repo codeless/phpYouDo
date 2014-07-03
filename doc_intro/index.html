@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>The ideas behind phpYouDo</title>
+<link rel="stylesheet"
+href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.0/css/foundation.min.css">
+<style>
+.impress-supported .step { width: 800px }
+.impress-supported .step.future { opacity: .1 }
+.impress-supported .step.past, .impress-supported .step.active { opacity: 1 }
+.impress-supported .teaser.step { text-align: center }
+pre { line-height: 100% }
+span.pyd { font-weight: bold; font-style: italic; color: #f90 }
+h1, span.pyd b { color: #7777a4 }
+h3 { color: #f90 }
+</style>
+</head>
+<body>
+<div id="impress">
+	<!--
+		Every slide/step is 2.000 x 2.000 Pixels;
+		ordered from left to right
+	-->
+	<div class="teaser step" data-x=0 data-y=0>
+		<img src="http://www.codeless.at/phpyoudo.png" alt="phpYouDo">
+		<br>
+		<br>
+		<h3>Yet another tool for creating
+			<b><i>relational database webapplications</i></b></h3>
+	</div>
+	<div class=step data-x=4000 data-y=0>
+		<h1>Goal 1: Faster development</h1>
+		<h3>Why?</h3>
+		<ul>
+			<li>Less time = less code = less maintenance</li>
+			<li>Other projects in the pipeline</li>
+		</ul>
+		<h3>How?</h3>
+		<p><span class="pyd"><b>php</b>YouDo</span>
+			has integrated default templates.</p>
+	</div>
+
+
+	<div class=step data-x=6000 data-y=0>
+		<h1>Goal 2: Separation of PHP and SQL</h1>
+		<h3>Why?</h3>
+		<ul>
+			<li>Gain readability</li>
+			<li>Outsource work more easily:<br>
+				Not every programmer is good
+				at SQL and not every database developer
+				is good at PHP</li>
+		</ul>
+		<h3>How?</h3>
+		<p>Queries are stored extra.</p>
+	</div>
+	<div class=step data-x=6000 data-y=350>
+		<pre>
+----------------------------------------+--------------------------------------
+PHP:					| and with phpYouDo:
+----------------------------------------+--------------------------------------
+$delete = isset($_GET['delete'])	| [delete_recipe]
+	? 1 : 0;			| ; Only gets executed when both
+if ($delete) {				| ; the recipe_id and delete are set:
+	$id = filter_input(		| sql="""
+		INPUT_GET,		| DELETE FROM recipes
+		'recipe_id',		| 	WHERE	id=:recipe_id* AND
+		FILTER_VALIDATE_INT);	|       	:delete*
+					| """
+	run_query('DELETE FROM		| 
+		recipes WHERE id='.	| [list_recipes]
+		$id);			| sql="""
+}					| SELECT id,
+					|        name
+# List recipes				|        FROM recipes
+$recipes = get_rows('SELECT id,		|        ORDER BY 2
+	name FROM recipes		|        LIMIT 40
+	ORDER BY 2			| """
+	LIMIT 40');			|
+output_somehow($recipes);		|
+----------------------------------------+--------------------------------------
+		</pre>
+	</div>
+	<div class=step data-x=8000 data-y=0>
+		<h1>Goal 3: Server relievement</h1>
+		<h3>Why?</h3>
+		<ul>
+			<li>Achieve better performance</li>
+			<li>Handle more users</li>
+		</ul>
+		<h3>How?</h3>
+		<p>
+			Server runs queries and exports results to client.
+			Client is responsible for rendering templates and
+			charts.
+		</p>
+	</div>
+	<div class=step data-x=8000 data-y=400>
+		<img src="tech.png" alt="">
+<!--
+Rendered through http://graphviz-dev.appspot.com/
+digraph g{
+phpYouDo -> SQL [label=" runs"];
+SQL -> Result [label=" exports"];
+Result -> HTML [label="as JSON"];
+Result -> PHP [label=" as Array"];
+PHP -> HTML;
+}
+-->
+	</div>
+	<div class=step data-x=10000 data-y=0>
+		<h1>Use <span class="pyd"><b>php</b>YouDo</span> when ...</h1>
+		<ul>
+			<li>the focus of your application is on the
+				database</li>
+			<li>you plan to integrate multiple
+				developers with different skills (PHP Dev, 
+				Database Dev, Design Dev)</li>
+			<li>your fellow developers are PHP beginners
+				but Database professionals</li>
+			<li>your business logic is in the database</li>
+			<li>you need an administrative gui &mdash; quick!</li>
+			<li>you want no "coded application", but
+				a transparent one</li>
+		</ul>
+	</div>
+	<div class=step data-x=12000 data-y=0>
+		<h1><span class="pyd"><b>php</b>YouDo</span> Glossary</h1>
+		<h3>Application</h3>
+		<p>A set of reports</p>
+		<h3>Report</h3>
+		<p>A set of queries</p>
+		<h3>Query</h3>
+		<p>An SQL statement</p>
+	</div>
+	<div class=step data-x=14000 data-y=0>
+		<img src="splash.png" alt="phpYouDo Splash Screen">
+	</div>
+	<div class=step data-x=14000 data-y=2000>
+		<img src="reports.png" alt="Reports overview">
+	</div>
+	<div class=step data-x=14000 data-y=4000>
+		<img src="get_report.png" alt="Calling the get-report">
+	</div>
+	<div class=step data-x=14000 data-y=6000>
+		<img src="get_report_param.png"
+			alt="Calling the get-report with params">
+	</div>
+	<div class=step data-x=16000 data-y=0>
+		<h1>What sort of applications were already done with
+			<span class="pyd"><b>php</b>YouDo</span>?</h1>
+		<ul>
+			<li><b>HTML-Generator</b> for Newsletter-Software,
+				accessing multiple databases</li>
+			<li><b>Analysis tool</b> for smartmeters,
+				with authentication and charts</li>
+			<li><b>Article administration tool</b> for
+				multiple individual webshops</li>
+			<li>Tiny <b>Webshop</b></li>
+			<li>... and other similar tools</li>
+		</ul>
+	</div>
+	<div class=step data-x=18000 data-y=0>
+		<h1>Future</h1>
+		<ul>
+			<li>Additional default templates for standard
+				cases; i.e. for messages
+				(delete failed/succeeded, ...)</li>
+			<li>Support for transactions</li>
+			<li>Support for testing applications</li>
+			<li>Caching</li>
+			<li>Diverse other performance optimizations</li>
+		</ul>
+		<h3>Your idea?</h3>
+	</div>
+	<div class="teaser step" data-x=20000 data-y=0>
+		<img src="http://www.codeless.at/phpyoudo.png" alt="phpYouDo">
+		<br>
+		<br>
+		<h3>Easily create <b><i>relational database
+			webapplications</i></b></h3>
+		<h4>Thank you for your time!</h4>
+		<p>
+			Contact: <a href="mailto:more@codeless.at"
+				target="_blank"
+				>more@codeless.at</a><br>
+			Demo: <a href="http://www.codeless.at/phpyoudo"
+				target="_blank"
+				>http://www.codeless.at/phpyoudo</a><br>
+			Source: <a href="https://www.github.com/codeless/phpyoudo"
+				target="_blank"
+				>https://www.github.com/codeless/phpyoudo</a>
+		</p>
+	</div>
+</div>
+<script
+src="//cdnjs.cloudflare.com/ajax/libs/impress.js/0.5.3/impress.min.js"></script>
+<script>impress().init();</script>
+</body>
+</html>
