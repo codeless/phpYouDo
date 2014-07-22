@@ -2,7 +2,7 @@ With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP 
 
 [Demo](http://www.codeless.at/phpyoudo)
 
-[Intro documentation](http://www.codeless.at/phpyoudo/doc_intro)
+[Intro documentation as slideshow (move along with cursor-keys)](http://www.codeless.at/phpyoudo/doc_intro)
 
 
 About
@@ -109,12 +109,13 @@ Debugging SQL-statements with MySQL
 Make use of the [General Query Log](https://dev.mysql.com/doc/refman/5.1/en/query-log.html).
 
 
-Alternatives to phpYouDo
-========================
+Alternatives or additions to phpYouDo
+=====================================
 
 * [Dadabik](http://www.dadabik.org/)
 * [DbToRia](http://www.dbtoria.org/)
 * [PHPLens](http://phplens.com/)
+* [Reportico](http://reportico.org/)
 * [SynApp2](http://www.synapp2.org/)
 * [VFront](http://www.vfront.org/)
 

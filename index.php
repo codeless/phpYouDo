@@ -725,24 +725,48 @@ function declareDefaultTemplates() {
 		<h2>Please choose an application:</h2>
 		<br>
 		<%
+		if (_.size(items) < 10) {
 			_.each(items, function(description, name) {
 				%>
 					<div class="panel">
 						<h3><%= name %></h3>
 						<pre><%= description %></pre>
 						<br>
-						<a href="?application=<%= name %>"
+						<a href="?application=<%=name%>"
 							class="button">
-							Start <%= name %> &raquo;
+							Start <%= name %>
+							&raquo;
 						</a>
 					</div>
 				<%
 			});
+		} else {
+			%><div class="row"><%
+			_.each(items, function(description, name) {
+				%>
+				<div class="large-3 columns">
+					<div class="panel">
+					<span data-tooltip class="has-tip"
+						title="<%= description %>"
+						><%= name %></span>
+					<br>
+					<br>
+					<a href="?application=<%= name %>"
+						class="small button">
+						Start &raquo;
+					</a>
+					</div>
+				</div>
+				<%
+			});
+			%></div><%
+		}
 		%>
 	</div>
 </div>
 EOT;
 	$defaultTemplates['applicationsQuicklaunch'] =<<< EOT
+<% if (items.length == 1) return; %>
 <div class="row">
 	<div class="large-12 columns">
 		<a class="tiny button" href="?">&laquo; Return to the overview</a>
