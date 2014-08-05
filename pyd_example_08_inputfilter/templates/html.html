@@ -1,8 +1,14 @@
 <div class="row">
 	<div class="large-12 columns">
 		<form	method=post
-			action="?application=example_08_inputfilter&report=html">
-			<textarea name="html"><%= items[0].filtered_html %></textarea>
+			action="?application=example_08_inputfilter&report=<%
+				var report = (items[0].report)
+					? items[0].report
+					: "html";
+				print(report);
+			%>">
+			<textarea name="html"
+				><%= items[0].filtered_html %></textarea>
 			<button type="submit" name="save" value=1>Post!</button>
 		</form>
 	</div>

@@ -2,7 +2,6 @@
 
 [desc]
 sql="""
-
 SELECT 'By using FILTER_SANITIZE_MAGIC_QUOTES,
 special characters used in HTML do not get stripped, but backslashed.<br>
 Click the links below and see the results.' AS Description
