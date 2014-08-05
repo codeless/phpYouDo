@@ -12,7 +12,7 @@ sql="SELECT * FROM lipsum"
 database=db2
 sql="""
 SELECT	lorem AS 'Last hits',
-	'<a href=?application=04_multi_db&report=multi&delete_hit='
+	'<a href=?application=example_04_multi_db&report=multi&delete_hit='
 		|| ROWID
 		|| '>Delete</a>' AS Action
 	FROM hits

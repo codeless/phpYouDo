@@ -209,7 +209,8 @@ else {
  *
  * @return array Names of applications
  */
-function getApplications() {
+function getApplications()
+{
 	$applicationDirectories = glob('pyd_*', GLOB_ONLYDIR);
 	$applications = preg_replace('/^pyd_/', '', $applicationDirectories);
 	return $applications;
@@ -219,7 +220,8 @@ function getApplications() {
 /**
  * @return table Application names as key, application description as value
  */
-function getApplicationsDetails() {
+function getApplicationsDetails()
+{
 	global $applications;
 
 	$details = array();
@@ -251,7 +253,8 @@ function getApplicationsDetails() {
 /**
  * @return table Configuration
  */
-function readConfigFile($filename) {
+function readConfigFile($filename)
+{
 	$config = null;
 
 	# If file does exist
@@ -260,20 +263,16 @@ function readConfigFile($filename) {
 	}
 	else {
 		trigger_error(
-			'The configuration file ' . $filename . ' does not exist.',
-			E_USER_ERROR);
+			'The configuration file ' . $filename .
+				' does not exist.', E_USER_ERROR);
 	}
 
 	return $config;
 }
 
 
-/*
-
-Function: getReportNames
-
-*/
-function getReportNames() {
+function getReportNames()
+{
 	global $input, $appPath;
 
 	# If no report or no language is given
@@ -291,17 +290,18 @@ function getReportNames() {
 }
 
 
-/*
-
-Function: exportVariable
-
-*/
-function exportVariable($name, $value, $setUpTemplate=false) {
+/**
+ * @param string $name
+ * @param mixed $value
+ * @param boolean $setUpTemplate
+ */
+function exportVariable($name, $value, $setUpTemplate=false)
+{
 	# Attach data to document
 	echo '<script type="text/javascript">',PHP_EOL,
 		'var ',$name,' = ',json_encode($value),';',PHP_EOL,
-		(($setUpTemplate) ? 'setUp("'.$name.'", '.$name.');' : null),PHP_EOL,
-		'</script>',PHP_EOL,PHP_EOL;
+		(($setUpTemplate) ? 'setUp("'.$name.'", '.$name.');' : null),
+		PHP_EOL,'</script>',PHP_EOL,PHP_EOL;
 }
 
 
@@ -311,7 +311,8 @@ function exportVariable($name, $value, $setUpTemplate=false) {
  * @param string|null $template
  * @param int|null $affectedRows
  */
-function attachToDocument($name, $data, $template=null, $affectedRows=null) {
+function attachToDocument($name, $data, $template=null, $affectedRows=null)
+{
 	global $defaultTemplates;
 
 	# If there is no template
@@ -338,28 +339,45 @@ function attachToDocument($name, $data, $template=null, $affectedRows=null) {
 
 
 /**
- * @return table Filtered user input from the GET-method
+ * @return table Filtered user input from the GET-method or, if running
+ *	in CLI mode, from the commandline parameters.
  */
-function getInput() {
+function getInput()
+{
 	global $applications;
-	return filter_input_array(
-		INPUT_GET,
-		array( 	'application' => array(
-				'filter' => FILTER_VALIDATE_REGEXP,
-				'options' => array(
-					'regexp' => '/(' . implode('|',
-						$applications) . ')/'
-				)
-			),
-		 	'mode' => array(
-				'filter' => FILTER_VALIDATE_REGEXP,
-				'options' => array(
-					'regexp' => '/(passon)/'
-				)
-			),
-			'report' => FILTER_SANITIZE_STRING,
-			'language' => FILTER_SANITIZE_STRING)
-	);
+	$input = array(
+		'application'	=> null,
+		'mode'		=> null,
+		'report'	=> null,
+		'language'	=> null);
+
+	if (PHP_SAPI == 'cli') {
+		$options = null;
+		$longopts = array('application::', 'mode::',
+			'report::', 'language::');
+		$input = array_merge($input, getopt($options, $longopts));
+	} else {
+		$input = filter_input_array(
+			INPUT_GET,
+			array( 	'application' => array(
+					'filter' => FILTER_VALIDATE_REGEXP,
+					'options' => array(
+						'regexp' => '/(' . implode('|',
+							$applications) . ')/'
+					)
+				),
+				'mode' => array(
+					'filter' => FILTER_VALIDATE_REGEXP,
+					'options' => array(
+						'regexp' => '/(passon)/'
+					)
+				),
+				'report' => FILTER_SANITIZE_STRING,
+				'language' => FILTER_SANITIZE_STRING)
+		);
+	}
+
+	return $input;
 }
 
 
@@ -368,7 +386,8 @@ function getInput() {
 Function: processReport
 
 */
-function processReport($report=null) {
+function processReport($report=null)
+{
 	global $input, $appPath, $tplPath;
 
 	$databases = array();
@@ -546,7 +565,8 @@ function processReport($report=null) {
 						$parameterValue = filter_input(
 							$source,
 							$p,
-							FILTER_SANITIZE_STRING);
+							FILTER_SANITIZE_STRING
+						);
 
 						# If value is set
 						if ($parameterValue) {
@@ -710,7 +730,8 @@ function processReport($report=null) {
 	}
 }
 
-function declareDefaultTemplates() {
+function declareDefaultTemplates()
+{
 	global $documentTitle;
 
 	# Default templates
@@ -889,32 +910,22 @@ EOT;
 }
 
 
-/*
-
-Function: passon
-
-Parameters:
-
-	$data -
-	$templateFile -
-
-*/
-function passon($data, $tplFile, $affectedRows=null) {
+function passon($data, $tplFile, $affectedRows=null)
+{
 	if (is_file($tplFile)) {
 		include($tplFile);
 	}
 }
 
 
-/**
- *
- */
-function pydlog($msg, $prefix=null) {
+function pydlog($msg, $prefix=null)
+{
 	$prefix = 'PYD ' . $prefix . ' ';
 	error_log($prefix . $msg);
 }
 
-function querylog($msg, $prefix=null) {
+function querylog($msg, $prefix=null)
+{
 	pydlog($msg, $prefix);
 }
 
@@ -927,7 +938,8 @@ function querylog($msg, $prefix=null) {
  *
  * @return string The expression with the integrated variable values
  */
-function parseExpression($expr, $log, $logPrefix) {
+function parseExpression($expr, $log, $logPrefix)
+{
 	list($variables, $fixedExpr) = extractVariables($expr, ':');
 
 	# Convert expression to PHP code by injecting the values
@@ -963,7 +975,8 @@ function parseExpression($expr, $log, $logPrefix) {
  *	definitions have been replaced with internal ones.
  *	The third array-entry holds an array of all obligatory params.
  */
-function extractVariables($expr, $varPrefix=null) {
+function extractVariables($expr, $varPrefix=null)
+{
 	$fixedExpr = $expr;
 	$matches = $vars = $obligatoryParams = array();
 	$hits = preg_match_all(
@@ -985,7 +998,18 @@ function extractVariables($expr, $varPrefix=null) {
 				? FILTER_SANITIZE_STRING
 				: constant($filters[$i]);
 
-			if ($sources[$i] == ':') {
+			if (PHP_SAPI == 'cli') {
+				$method = 'cli';
+				$cliparam = getopt(
+					null,
+					array($paramName . '::')
+				);
+
+				$value = ($cliparam &&
+					isset($cliparam[$paramName]))
+					? $cliparam[$paramName]
+					: null;
+			} else if ($sources[$i] == ':') {
 				$method = 'get';
 				$value = filter_input(
 					INPUT_GET,
@@ -1033,8 +1057,3 @@ function extractVariables($expr, $varPrefix=null) {
 	return array($vars, $fixedExpr, $obligatoryParams);
 }
 
-
-# Creating HTML documents with the DOM classes:
-# http://www.ultramegatech.com/2009/07/generating-xhtml-documents-using-domdocument-in-php/
-# http://php.net/manual/en/class.domdocument.php
-die();
