@@ -6,6 +6,7 @@
  * @license http://creativecommons.org/licenses/by/4.0/
  *	Creative Commons Attribution 4.0 International License
  * Creation date: 2013-03-28
+ * Last update: 2014-08-07
  */
 
 # Enable strict error reporting and the output of messages
@@ -710,9 +711,11 @@ function processReport($report=null)
 			# Check for a template
 			$template = null;
 			if (isset($c['template'])) {
-				$templateFile = $appPath . '/templates/' . $c['template'] . '.html';
+				$templateFile = $appPath . '/templates/' .
+					$c['template'] . '.html';
 			} else {
-				$templateFile = $appPath . '/templates/' . $sectionName . '.html';
+				$templateFile = $appPath . '/templates/' .
+					$sectionName . '.html';
 			}
 
 			# Check for file existance

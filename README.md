@@ -1,6 +1,6 @@
 With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP gets standardized, clearly arranged and last but not least: mainly outsourced to the client.
 
-[![Build Status](https://travis-ci.org/codeless/phpyoudo.png?branch=master)](https://travis-ci.org/codeless/phpyoudo)
+[![Build Status](https://travis-ci.org/codeless/phpyoudo.png?branch=master)](https://travis-ci.org/codeless/phpYouDo)
 
 [Demo](http://www.codeless.at/phpyoudo)
 
@@ -27,6 +27,7 @@ Features
 * Easy integration of user-input from GET (:), POST (#) and SESSION ($)
 * Easily integration of JavaScript template engines
 * Load removal from the server when using JavaScript
+* Not dependent on JavaScript
 * Can manage multiple applications
 * Lightweight library: phpYouDo as a library consists of only one file; additional scripts and files (JavaScript and CSS) are integrated via Content Delivery Networks (CDN)
 * Execute your reports from the commandline (f.i. as cronjob)
