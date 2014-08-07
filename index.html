@@ -4,34 +4,48 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>phpYouDo by codeless</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="wrapper">
+
       <header>
         <h1>phpYouDo</h1>
         <p>Mini Webapp Engine</p>
-        <p class="view"><a href="https://github.com/codeless/phpYouDo">View the Project on GitHub <small>codeless/phpYouDo</small></a></p>
-        <ul>
-          <li><a href="https://github.com/codeless/phpYouDo/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/codeless/phpYouDo/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/codeless/phpYouDo">View On <strong>GitHub</strong></a></li>
-        </ul>
       </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/codeless/phpYouDo" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/codeless/phpYouDo/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/codeless/phpYouDo/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
       <section>
         <p>With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP gets standardized, clearly arranged and last but not least: mainly outsourced to the client.</p>
 
+<p><a href="https://travis-ci.org/codeless/phpYouDo"><img src="https://travis-ci.org/codeless/phpYouDo.png?branch=master" alt="Build Status"></a></p>
+
 <p><a href="http://www.codeless.at/phpyoudo">Demo</a></p>
 
-<p><a href="http://www.codeless.at/phpyoudo/doc_intro">Intro documentation</a></p>
+<p><a href="http://www.codeless.at/phpyoudo/doc_intro">Intro slideshow (move along with cursor-keys)</a></p>
 
 <h1>
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h1>
@@ -53,8 +67,10 @@
 <li>Easy integration of user-input from GET (:), POST (#) and SESSION ($)</li>
 <li>Easily integration of JavaScript template engines</li>
 <li>Load removal from the server when using JavaScript</li>
+<li>Not dependent on JavaScript</li>
 <li>Can manage multiple applications</li>
 <li>Lightweight library: phpYouDo as a library consists of only one file; additional scripts and files (JavaScript and CSS) are integrated via Content Delivery Networks (CDN)</li>
+<li>Execute your reports from the commandline (f.i. as cronjob)</li>
 </ul><h1>
 <a name="when-to-use-phpyoudo" class="anchor" href="#when-to-use-phpyoudo"><span class="octicon octicon-link"></span></a>When to use phpYouDo?</h1>
 
@@ -129,12 +145,13 @@ log=1
 <p>Make use of the <a href="https://dev.mysql.com/doc/refman/5.1/en/query-log.html">General Query Log</a>.</p>
 
 <h1>
-<a name="alternatives-to-phpyoudo" class="anchor" href="#alternatives-to-phpyoudo"><span class="octicon octicon-link"></span></a>Alternatives to phpYouDo</h1>
+<a name="alternatives-or-additions-to-phpyoudo" class="anchor" href="#alternatives-or-additions-to-phpyoudo"><span class="octicon octicon-link"></span></a>Alternatives or additions to phpYouDo</h1>
 
 <ul>
 <li><a href="http://www.dadabik.org/">Dadabik</a></li>
 <li><a href="http://www.dbtoria.org/">DbToRia</a></li>
 <li><a href="http://phplens.com/">PHPLens</a></li>
+<li><a href="http://reportico.org/">Reportico</a></li>
 <li><a href="http://www.synapp2.org/">SynApp2</a></li>
 <li><a href="http://www.vfront.org/">VFront</a></li>
 </ul><h1>
@@ -157,11 +174,11 @@ log=1
 
 <p>This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.</p>
       </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/codeless">codeless</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/codeless">codeless</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
