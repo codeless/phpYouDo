@@ -489,11 +489,17 @@ function processReport($report=null)
 			$databaseConfigurationFile =
 				$databaseConfigDir .
 				$databaseID . '.ini.php';
-			$databaseConfiguration = readConfigFile($databaseConfigurationFile);
+			$databaseConfiguration = readConfigFile(
+				$databaseConfigurationFile);
 
 			# Compile Data-Source-Name (DSN)
-			if ($databaseConfiguration['type'] == 'sqlite') {
-				$dbfile	= dirname(realpath($databaseConfigurationFile)) .
+			if (isset($databaseConfiguration['dsn'])) {
+				$dsn	= $databaseConfiguration['dsn'];
+				$user	= $databaseConfiguration['username'];
+				$password = $databaseConfiguration['password'];
+			} else if ($databaseConfiguration['type'] == 'sqlite') {
+				$dbfile	= dirname(realpath(
+					$databaseConfigurationFile)) .
 					DIRECTORY_SEPARATOR .
 					$databaseConfiguration['database'];
 				$dsn	= $databaseConfiguration['type'] .
