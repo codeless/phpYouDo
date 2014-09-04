@@ -9,9 +9,10 @@ class Example05Test extends PHPUnit_Framework_TestCase
 	public function testSubreport()
 	{
 		passthru('php index.php ' .
-			'--application=example_05_subreport ' .
+			'--application=example_05_subreports ' .
 			'--report=report');
 
-		$this->expectOutputRegex('/SUM(lorem)/');
+		$this->expectOutputRegex('/var count/');
+		$this->expectOutputRegex('/var sum/');
 	}
 }

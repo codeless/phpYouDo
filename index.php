@@ -423,11 +423,10 @@ function processReport($report=null)
 
 	# Extract databases which are used by the queries
 	$i = 0;
-	$c = current($reportConfiguration);
+	$c = reset($reportConfiguration);
 	do {
 		++$i;
 		$sectionName = key($reportConfiguration);
-error_log('Section: '.$sectionName);
 
 		# Fix section name
 		if (	isset($c['_PYD_REAL_SECTION_NAME_']) &&
@@ -539,9 +538,11 @@ error_log('Section: '.$sectionName);
 				$databaseID = $c['database'];
 			}
 		}
-		else {
+		else if (isset($c['query'])) {
 			list($databaseID, $queryName) =
 				explode('.', $c['query']);
+		} else {
+			continue;
 		}
 
 		# If not yet connected to database
