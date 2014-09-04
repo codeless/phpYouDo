@@ -463,7 +463,7 @@ function processReport($report=null)
 		# Repeat section?
 		if (isset($c['till'])) {
 			# Run section another time (after the current run)?
-			if (parseExpression($c['pre'], $log, $logPrefix)) {
+			if (parseExpression($c['till'], $log, $logPrefix)) {
 				# Then inject another section into
 				# the report:
 				$newSection = array($c);
