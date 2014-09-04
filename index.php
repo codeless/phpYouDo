@@ -409,8 +409,24 @@ function processReport($report=null)
 		$report . '.ini.php';
 	$reportConfiguration = readConfigFile($reportConfigurationFile);
 
+	# TODO: At this point, the section names should be checked.
+	# If they interfere with the PYD internals, the results
+	# are unpredictable.
+
 	# Extract databases which are used by the queries
-	foreach ($reportConfiguration as $sectionName => $c) {
+	$i = 0;
+	$c = current($reportConfiguration);
+	do {
+		++$i;
+		$sectionName = key($reportConfiguration);
+
+		# Fix section name
+		if (	isset($c['_PYD_REAL_SECTION_NAME_']) &&
+			is_int($sectionName))
+		{
+			$sectionName = $c['_PYD_REAL_SECTION_NAME_'];
+		}
+
 		$log		= (isset($c['log'])) ? (int) $c['log'] : 0;
 		$logPrefix	= ($log)
 			? $logPrefix = $input['application'] .
@@ -419,6 +435,16 @@ function processReport($report=null)
 				DIRECTORY_SEPARATOR .
 				$sectionName
 			: null;
+
+		# The section name can hold parameters,
+		# which are replaced with the actual value:
+		$originalSectionName = $sectionName;
+		$vars = extractVariables($sectionName, ':');
+		$sectionName = str_replace(
+			array_keys($vars[0]),
+			array_values($vars[0]),
+			$vars[1]
+		);
 
 		# Pre-evaluate an expression?
 		if (isset($c['pre'])) {
@@ -431,6 +457,32 @@ function processReport($report=null)
 						$logPrefix);
 				}
 				continue;
+			}
+		}
+
+		# Repeat section?
+		if (isset($c['till'])) {
+			# Run section another time (after the current run)?
+			if (parseExpression($c['pre'], $log, $logPrefix)) {
+				# Then inject another section into
+				# the report:
+				$newSection = array($c);
+				$newSection[0]['_PYD_REAL_SECTION_NAME_'] =
+					$originalSectionName;
+				array_splice(
+					$reportConfiguration,
+					$i,
+					0,
+					$newSection
+				);
+
+				# Because the array_splice operation
+				# positioned the array pointer at the
+				# first position, the pointer has to
+				# get re-positioned to the current element:
+				for ($j = $i; $j > 1; $j--) {
+					next($reportConfiguration);
+				}
 			}
 		}
 
@@ -656,7 +708,8 @@ function processReport($report=null)
 		if ($log) {
 			$endtime	= microtime(true);
 			$duration	= $endtime - $starttime;
-			querylog('Seconds needed for binding params and executing query: ' . $duration, $logPrefix);
+			querylog('Seconds needed for binding params and ' .
+				'executing query: ' . $duration, $logPrefix);
 		}
 
 		# If query could get executed successfully
@@ -706,7 +759,9 @@ function processReport($report=null)
 		}
 
 		# Compile path to PHP template
-		$tplFile = $tplPath . DIRECTORY_SEPARATOR . (isset($c['template']) ? $c['template'] : $sectionName) . '.php';
+		$tplFile = $tplPath . DIRECTORY_SEPARATOR .
+			(isset($c['template'])
+			? $c['template'] : $sectionName) . '.php';
 
 		# When template is PHP script or mode is passon
 		if (is_file($tplFile) || $input['mode'] == 'passon') {
@@ -736,7 +791,7 @@ function processReport($report=null)
 				$template,
 				$affectedRows);
 		}
-	}
+	} while ($c = next($reportConfiguration));
 }
 
 function declareDefaultTemplates()
