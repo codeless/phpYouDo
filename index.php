@@ -382,11 +382,9 @@ function getInput()
 }
 
 
-/*
-
-Function: processReport
-
-*/
+/**
+ * @param string $report Name of the report to execute
+ */
 function processReport($report=null)
 {
 	global $input, $appPath, $tplPath;
@@ -409,6 +407,16 @@ function processReport($report=null)
 		$report . '.ini.php';
 	$reportConfiguration = readConfigFile($reportConfigurationFile);
 
+	# Loop through the sections and initialize empty subreports;
+	# otherwise they would get ignored because of the usage of
+	# next():
+	foreach ($reportConfiguration as $sectionName => $c) {
+		if (!$c) {
+			# Update
+			$reportConfiguration[$sectionName]['dummy'] = 1;
+		}
+	}
+
 	# TODO: At this point, the section names should be checked.
 	# If they interfere with the PYD internals, the results
 	# are unpredictable.
@@ -419,6 +427,7 @@ function processReport($report=null)
 	do {
 		++$i;
 		$sectionName = key($reportConfiguration);
+error_log('Section: '.$sectionName);
 
 		# Fix section name
 		if (	isset($c['_PYD_REAL_SECTION_NAME_']) &&
