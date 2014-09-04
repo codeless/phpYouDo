@@ -23,8 +23,9 @@ Features
 ========
 
 * SQL and HTML separation from PHP code
-* Conditional execution of SQL queries
-* Easy integration of user-input from GET (:), POST (#) and SESSION ($)
+* Easy integration of user-input from GET (:), POST (#) and SESSION ($) into SQL queries
+* Conditional execution of SQL queries by using mandatory user-input or by scripted preconditions
+* Executing the same SQL query multiple times till an end-condition matches
 * Easily integration of JavaScript template engines
 * Load removal from the server when using JavaScript
 * Not dependent on JavaScript
