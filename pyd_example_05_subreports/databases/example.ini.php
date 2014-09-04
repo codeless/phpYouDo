@@ -1,6 +1,7 @@
 ;<?php /*
 
-type=sqlite
-database=example.sq3
+dsn="sqlite:demodb/example.sq3"
+username=
+password=
 
 ; */
