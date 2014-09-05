@@ -1,0 +1,1 @@
+Often, users have multiple options to choose from you may want to select records to -- f.i. when using a list of checkboxes with the same name. This example demonstrates how to use the resulting array directly in your queries.

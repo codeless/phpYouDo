@@ -1,0 +1,35 @@
+<%
+
+if (items.length == 0) {
+	return;
+}
+
+%>
+<form>
+	<input type="hidden" name="application" value="example_11_input_arrays">
+	<input type="hidden" name="report" value="arrays">
+	<div class="row">
+		<div class="large-12 columns">
+			Please choose some records you want details to:
+			<hr>
+			<%
+				_.each(items, function(i) {
+					%>
+					<input	type="checkbox"
+						name="details[]"
+						value="<%= i.lorem %>"
+						id="c_<%= i.lorem %>">
+					<label for="c_<%= i.lorem %>">
+						<%= i.ipsum %>
+					</label>
+					<br>
+					<%
+				});
+			%>
+			<hr>
+			<button type="submit" name="show" value="1">
+				Show details
+			</button>
+		</div>
+	</div>
+</form>

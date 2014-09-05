@@ -660,15 +660,17 @@ function processReport($report=null)
 				}
 			}
 		} else if (isset($c['sql'])) {	# New method
-			list($parameters, $query, $c['obligatoryParameters']) =
+			list(	$parameters,
+				$query,
+				$c['obligatoryParameters']) =
 				extractVariables($c['sql']);
 		}
 
 		if ($log && $log == 1) {
 			querylog('SQL params: ' . implode(',',
 				array_keys($parameters)), $logPrefix);
-			querylog('SQL param values: ' . implode(',',
-				array_values($parameters)), $logPrefix);
+			querylog('SQL param values: ' .
+				json_encode($parameters), $logPrefix);
 		}
 
 		if (isset($c['obligatoryParameters'])) {
@@ -708,7 +710,8 @@ function processReport($report=null)
 		}
 
 		# Prepare query
-		$statementHandle = $databases[$databaseID]->prepare($query);
+		$statementHandle = $databases[$databaseID]
+			->prepare($query);
 		$statementHandle->setFetchMode(PDO::FETCH_OBJ);
 
 		# Bind params and execute query;
@@ -1044,9 +1047,10 @@ function parseExpression($expr, $log, $logPrefix)
  *	names; defaults to null
  *
  * @return array The first array-entry holds a table with the variable's
- *	name as key and its value, while the second array-entry holds
- *	the expression in a fixed syntax; that is, the original variable
- *	definitions have been replaced with internal ones.
+ *	name as key and its value (or values, in case of an array),
+ *	while the second array-entry holds the expression in a fixed syntax;
+ *	that is, the original variable definitions have been replaced with
+ *	internal ones.
  *	The third array-entry holds an array of all obligatory params.
  */
 function extractVariables($expr, $varPrefix=null)
@@ -1100,6 +1104,61 @@ function extractVariables($expr, $varPrefix=null)
 				$value = (isset($_SESSION[$paramName]))
 					? $_SESSION[$paramName]
 					: null;
+			}
+
+			# If $value is empty and method is one of
+			# get/post/session, check if input is an array:
+			if (	!$value && in_array(
+					$method,
+					array('get', 'post', 'session')))
+			{
+				# Check for an array
+				$realParam = '$_' . strtoupper($method) .
+					'["' . $paramName . '"]';
+				$check = 'return (isset(' . $realParam .
+					') && is_array(' . $realParam .
+					') ? 1 : 0);';
+				if (eval($check)) {
+					# Get input array
+					if ($method == 'get') {
+						$value = filter_var_array(
+							$_GET[$paramName],
+							$filter);
+					} else if ($method == 'post') {
+						$value = filter_var_array(
+							$_POST[$paramName],
+							$filter);
+					} else if ($method == 'session') {
+						$value = filter_var_array(
+							$_SESSION[$paramName],
+							$filter);
+					}
+
+					# If the array has more than one
+					# values, inject parameters into
+					# flat array:
+					$countValues = sizeof($value);
+					if ($countValues > 1) {
+						for (	$j = 1;
+							$j < $countValues;
+							$j++)
+						{
+# Compile ID of param
+$paramID = $method . '_' . $paramName . '_PYD_ARRAY_' . $j;
+
+# Save parameter
+$vars[$varPrefix . $paramID] = $value[$j];
+
+# Extend SQL
+$bindList[] = ':' . $paramID;
+						}
+					}
+print_r($vars);
+die($expr);
+
+					# Set first value:
+					$value = $value[0];
+				}
 			}
 
 			# Compile ID of param
