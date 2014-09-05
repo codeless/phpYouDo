@@ -1149,31 +1149,12 @@ $paramID = $method . '_' . $paramName . '_PYD_ARRAY_' . $j;
 # Save parameter
 $vars[$varPrefix . $paramID] = $value[$j];
 
-# Adapt bind list
-if (!isset($addToBindList)) {
-	$addToBindList = array();
-}
-$addToBindList[] = ':' . $paramID;
-
-# Adapt matches
-if (!isset($addToMatches)) {
-	$addToMatches = array();
-}
-$addToMatches[] = ':' . $paramName . '_PYD_ARRAY_' . $j;
-
 # Extend SQL
-$expr = str_replace(
-	$matches[0][$i],
-	$matches[0][$i] . ',' . ':' . $paramName . '_PYD_ARRAY_' . $j,
-	$expr);
+$bindList[] = ':' . $paramID;
 						}
 					}
-/*
-echo '<pre>';
-print_r($bindList);
-print_r($matches[0]);
+print_r($vars);
 die($expr);
-*/
 
 					# Set first value:
 					$value = $value[0];
@@ -1194,16 +1175,6 @@ die($expr);
 			$bindList[] = ':' . $paramID;
 		}
 
-# Add array matches
-if (isset($addToMatches)) {
-$matches[0] = array_merge($matches[0], $addToMatches);
-}
-
-if (isset($addToBindList)) {
-$bindList = array_merge($bindList, $addToBindList);
-}
-
-
 		# Make obligatory params unique
 		$obligatoryParams = (isset($obligatoryParams[0]))
 			? array_unique($obligatoryParams)
@@ -1215,7 +1186,6 @@ $bindList = array_merge($bindList, $addToBindList);
 			$bindList,
 			$expr);
 	}
-	error_log($fixedExpr);
 
 	return array($vars, $fixedExpr, $obligatoryParams);
 }
