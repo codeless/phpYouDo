@@ -1,3 +1,5 @@
+![](http://www.codeless.at/phpyoudo.png "phpYouDo")
+
 With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP gets standardized, clearly arranged and last but not least: mainly outsourced to the client.
 
 [![Build Status](https://travis-ci.org/codeless/phpYouDo.png?branch=master)](https://travis-ci.org/codeless/phpYouDo)
@@ -12,7 +14,10 @@ About
 
 DDWA's in general consist of these parts: HTML-Templates, PHP-Scripts and JavaScripts. Most often, these parts are tightly woven into each other, which makes it tricky for the designer to edit the HTML. Additionally, the PHP-Programmer has a hard time extracting SQL-queries for specific inspections.
 
-phpYouDo tries to solve these problems by separating the PHP-Scripts from the SQL-Queries and the HTML-Templates. SQL-Queries are outsourced to configuration files and HTML-Templates are combined with JavaScript to display the selected records.
+phpYouDo tries to solve these problems by separating the PHP-Scripts from the SQL-Queries and the HTML-Templates. SQL-Queries are outsourced to configuration files and HTML-Templates are combined with JavaScript to display the selected records:
+
+![](http://www.codeless.at/phpyoudo/doc_intro/tech.png "General logic")
+
 
 An application in phpYouDo consists of one or more reports. Reports in turn consists of one or more database queries. Each query can get visualized with an individual HTML or PHP template.
 
