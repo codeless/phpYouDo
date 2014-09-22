@@ -171,7 +171,11 @@ else {
 		exportVariable('activeApplication', $input['application']);
 
 		# Attach applications as JSON data to document
-		attachToDocument('applicationsQuicklaunch', $applications);
+		if (sizeof($applications) > 1) {
+			attachToDocument(
+				'applicationsQuicklaunch',
+				$applications);
+		}
 	} else {
 		# No application has been chosen yet;
 		# get applications details and export them
