@@ -6,7 +6,6 @@
  * @license http://creativecommons.org/licenses/by/4.0/
  *	Creative Commons Attribution 4.0 International License
  * Creation date: 2013-03-28
- * Last update: 2014-08-07
  */
 
 # Enable strict error reporting and the output of messages
@@ -1219,7 +1218,6 @@ $bindList = array_merge($bindList, $addToBindList);
 			$bindList,
 			$expr);
 	}
-	error_log($fixedExpr);
 
 	return array($vars, $fixedExpr, $obligatoryParams);
 }
