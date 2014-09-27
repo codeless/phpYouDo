@@ -31,6 +31,11 @@ if ($input['application']) {
 	$appConfig	= (is_file($appConfigFile))
 				? readConfigFile($appConfigFile)
 				: null;
+
+	if (isset($appConfig) && isset($appConfig['mode'])) {
+		$input['mode'] = $appConfig['mode'];
+	}
+
 	$sessionName	= (isset($appConfig) &&
 				isset($appConfig['sessionName']))
 				? $appConfig['sessionName']
