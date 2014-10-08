@@ -1116,7 +1116,7 @@ function extractVariables($expr, $varPrefix=null)
 
 			# If $value is empty and method is one of
 			# get/post/session, check if input is an array:
-			if (	!$value && in_array(
+			if (	(!$value || is_array($value)) && in_array(
 					$method,
 					array('get', 'post', 'session')))
 			{
