@@ -720,6 +720,13 @@ function processReport($report=null)
 		# Prepare query
 		$statementHandle = $databases[$databaseID]
 			->prepare($query);
+
+		# Catch errors
+		if (!$statementHandle) {
+			trigger_error('Error in SQL statement: ' . $query);
+			continue;
+		}
+
 		$statementHandle->setFetchMode(PDO::FETCH_OBJ);
 
 		# Bind params and execute query;
