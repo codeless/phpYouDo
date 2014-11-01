@@ -1215,6 +1215,7 @@ die($expr);
 					$value,
 					$expr
 				);
+				unset($matches[0][$i]);
 			} else {
 				$bindList[] = ':' . $paramID;
 			}
