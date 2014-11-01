@@ -1073,7 +1073,7 @@ function extractVariables($expr, $varPrefix=null)
 	$fixedExpr = $expr;
 	$matches = $vars = $obligatoryParams = array();
 	$hits = preg_match_all(
-		'/(:|#|\$)([A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?/',
+		'/(:|#|\$)([A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?(!)?/',
 		$expr,
 		$matches);
 
@@ -1083,6 +1083,7 @@ function extractVariables($expr, $varPrefix=null)
 		$parametersToBind	= $matches[2];
 		$filters		= $matches[3];
 		$obligatory		= $matches[4];
+		$instant_bind		= $matches[5];
 		$bindList		= array();
 
 		foreach ($parametersToBind as $i => $paramName) {
@@ -1206,7 +1207,17 @@ die($expr);
 				$obligatoryParams[] = $paramID;
 			}
 
-			$bindList[] = ':' . $paramID;
+			# instant_bind is important to enable
+			# dynamic binding of table or column names:
+			if ($instant_bind[$i] == '!') {
+				$expr = str_replace(
+					$matches[0][$i],
+					$value,
+					$expr
+				);
+			} else {
+				$bindList[] = ':' . $paramID;
+			}
 		}
 
 # Add array matches
