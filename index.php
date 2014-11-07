@@ -743,6 +743,7 @@ function processReport($report=null)
 		# If query could get executed successfully
 		if ($rc) {
 			$affectedRows 	= $statementHandle->rowCount();
+			$lastInsertId	= $databases[$databaseID]->lastInsertId();
 			$results 	= array();
 
 			# Collect results:
@@ -752,6 +753,7 @@ function processReport($report=null)
 		}
 		else {
 			$affectedRows 	= null;
+			$lastInsertId	= null;
 			$results 	= $statementHandle->errorInfo();
 		}
 
@@ -794,7 +796,7 @@ function processReport($report=null)
 		# When template is PHP script or mode is passon
 		if (is_file($tplFile) || $input['mode'] == 'passon') {
 			# Compile templatename
-			passon($results, $tplFile, $affectedRows);
+			passon($results, $tplFile, $affectedRows, $lastInsertId);
 		}
 		else {
 			# Check for a template
@@ -1002,7 +1004,7 @@ EOT;
 }
 
 
-function passon($data, $tplFile, $affectedRows=null)
+function passon($data, $tplFile, $affectedRows=null, $lastInsertId=null)
 {
 	if (is_file($tplFile)) {
 		include($tplFile);
