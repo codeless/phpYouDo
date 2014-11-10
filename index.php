@@ -711,7 +711,7 @@ function processReport($report=null)
 
 				if (isset($c['till'])) {
 					$msg = 'phpYouDo exited because of probable infinite loop in section ' . $sectionName . ': preconditions not met';
-					$querylog($msg);
+					querylog($msg);
 					die($msg);
 				}
 
