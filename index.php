@@ -708,6 +708,13 @@ function processReport($report=null)
 					querylog('Missing obligatory params...',
 						$logPrefix);
 				}
+
+				if (isset($c['till'])) {
+					$msg = 'phpYouDo exited because of probable infinite loop in section ' . $sectionName . ': preconditions not met';
+					$querylog($msg);
+					die($msg);
+				}
+
 				continue; # continue with next query
 			}
 		} else {
