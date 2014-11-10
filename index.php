@@ -1094,18 +1094,9 @@ function extractVariables($expr, $varPrefix=null)
 				? FILTER_SANITIZE_STRING
 				: constant($filters[$i]);
 
-			if (PHP_SAPI == 'cli') {
-				$method = 'cli';
-				$cliparam = getopt(
-					null,
-					array($paramName . '::')
-				);
+			$method = $value = null;
 
-				$value = ($cliparam &&
-					isset($cliparam[$paramName]))
-					? $cliparam[$paramName]
-					: null;
-			} else if ($sources[$i] == ':') {
+			if ($sources[$i] == ':') {
 				$method = 'get';
 				$value = filter_input(
 					INPUT_GET,
@@ -1121,6 +1112,19 @@ function extractVariables($expr, $varPrefix=null)
 				$method = 'session';
 				$value = (isset($_SESSION[$paramName]))
 					? $_SESSION[$paramName]
+					: null;
+			}
+
+			if (!$value && PHP_SAPI == 'cli') {
+				$method = 'cli';
+				$cliparam = getopt(
+					null,
+					array($paramName . '::')
+				);
+
+				$value = ($cliparam &&
+					isset($cliparam[$paramName]))
+					? $cliparam[$paramName]
 					: null;
 			}
 
