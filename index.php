@@ -1201,14 +1201,6 @@ die($expr);
 			# Compile ID of param
 			$paramID = $method . '_' . $paramName;
 
-			# Save parameter
-			$vars[$varPrefix . $paramID] = $value;
-
-			# Obligatory param?
-			if ($obligatory[$i] == '*') {
-				$obligatoryParams[] = $paramID;
-			}
-
 			# instant_bind is important to enable
 			# dynamic binding of table or column names:
 			if ($instant_bind[$i] == '!') {
@@ -1220,18 +1212,25 @@ die($expr);
 				unset($matches[0][$i]);
 			} else {
 				$bindList[] = ':' . $paramID;
+
+				# Save parameter
+				$vars[$varPrefix . $paramID] = $value;
+
+				# Obligatory param?
+				if ($obligatory[$i] == '*') {
+					$obligatoryParams[] = $paramID;
+				}
 			}
 		}
 
-# Add array matches
-if (isset($addToMatches)) {
-$matches[0] = array_merge($matches[0], $addToMatches);
-}
+		# Add array matches
+		if (isset($addToMatches)) {
+			$matches[0] = array_merge($matches[0], $addToMatches);
+		}
 
-if (isset($addToBindList)) {
-$bindList = array_merge($bindList, $addToBindList);
-}
-
+		if (isset($addToBindList)) {
+			$bindList = array_merge($bindList, $addToBindList);
+		}
 
 		# Make obligatory params unique
 		$obligatoryParams = (isset($obligatoryParams[0]))
