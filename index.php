@@ -724,44 +724,85 @@ function processReport($report=null)
 			}
 		}
 
-		# Prepare query
-		$statementHandle = $databases[$databaseID]
-			->prepare($query);
+		$cachefile = $appPath . '/pydcache/' . $report .
+			'%' . $sectionName;
+		$cache = (isset($c['cache']) && $c['cache'] &&
+			sizeof($parameters) == 0)
+			? true : false;
+		$cached = (is_file($cachefile) && is_readable($cachefile))
+			? true : false;
 
-		# Catch errors
-		if (!$statementHandle) {
-			trigger_error('Error in SQL statement: ' . $query);
-			continue;
-		}
-
-		$statementHandle->setFetchMode(PDO::FETCH_OBJ);
-
-		# Bind params and execute query;
-		# measure duration when logging:
-		if ($log) { $starttime = microtime(true); }
-		$rc = $statementHandle->execute($parameters);
-		if ($log) {
-			$endtime	= microtime(true);
-			$duration	= $endtime - $starttime;
-			querylog('Seconds needed for binding params and ' .
-				'executing query: ' . $duration, $logPrefix);
-		}
-
-		# If query could get executed successfully
-		if ($rc) {
-			$affectedRows 	= $statementHandle->rowCount();
-			$lastInsertId	= $databases[$databaseID]->lastInsertId();
-			$results 	= array();
-
-			# Collect results:
-			while ($r = $statementHandle->fetch()) {
-				$results[] = $r;
+		if ($cache && $cached) {
+			if ($log) {
+				querylog(
+					'Loading query results from cache',
+					$logPrefix
+				);
 			}
-		}
-		else {
-			$affectedRows 	= null;
+
+			$cache		= file_get_contents($cachefile);
+			$results 	= unserialize($cache);
+			$affectedRows 	= sizeof($results);
 			$lastInsertId	= null;
-			$results 	= $statementHandle->errorInfo();
+		} else {
+			# Prepare query
+			$statementHandle = $databases[$databaseID]
+				->prepare($query);
+
+			# Catch errors
+			if (!$statementHandle) {
+				trigger_error('Error in SQL statement: ' .
+					$query);
+				continue;
+			}
+
+			$statementHandle->setFetchMode(PDO::FETCH_OBJ);
+
+			# Bind params and execute query;
+			# measure duration when logging:
+			if ($log) { $starttime = microtime(true); }
+			$rc = $statementHandle->execute($parameters);
+			if ($log) {
+				$endtime	= microtime(true);
+				$duration	= $endtime - $starttime;
+				querylog('Seconds needed for binding params and ' .
+					'executing query: ' . $duration, $logPrefix);
+			}
+
+			# If query could get executed successfully
+			if ($rc) {
+				$affectedRows 	= $statementHandle->rowCount();
+				$lastInsertId	= $databases[$databaseID]->lastInsertId();
+				$results 	= array();
+
+				# Collect results:
+				while ($r = $statementHandle->fetch()) {
+					$results[] = $r;
+				}
+
+				if ($cache) {
+					$cachedir = dirname($cachefile);
+					if (!is_dir($cachedir)) {
+						mkdir($cachedir);
+					}
+
+					# Write to cache
+					file_put_contents(
+						$cachefile,
+						serialize($results)
+					);
+
+					if ($log) {
+						querylog('Results cached',
+							$logPrefix);
+					}
+				}
+			}
+			else {
+				$affectedRows 	= null;
+				$lastInsertId	= null;
+				$results 	= $statementHandle->errorInfo();
+			}
 		}
 
 		# If rows should get stored in session
