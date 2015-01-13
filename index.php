@@ -727,7 +727,8 @@ function processReport($report=null)
 		$cachefile = $appPath . '/pydcache/' . $report .
 			'%' . $sectionName;
 		$cache = (isset($c['cache']) && $c['cache'] &&
-			sizeof($parameters) == 0)
+			(sizeof($parameters) == 0 ||
+				$originalSectionName != $sectionName))
 			? true : false;
 		$cached = (is_file($cachefile) && is_readable($cachefile))
 			? true : false;
