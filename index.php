@@ -1124,7 +1124,7 @@ function extractVariables($expr, $varPrefix=null)
 	$fixedExpr = $expr;
 	$matches = $vars = $obligatoryParams = array();
 	$hits = preg_match_all(
-		'/(:|#|\$)([A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?(!)?/',
+		'/(:|#|\$)([A-Za-z][A-Za-z0-9_]+)\b\[?([a-zA-Z_]+)?\]?(\*)?(!)?/',
 		$expr,
 		$matches);
 
