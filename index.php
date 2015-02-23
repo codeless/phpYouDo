@@ -47,6 +47,16 @@ if ($input['application']) {
 session_start();
 session_regenerate_id();
 
+# Pre-evaluate an expression?
+if (isset($appConfig) && isset($appConfig['pre'])) {
+	if (	!parseExpression($appConfig['pre'],
+		$log=0,
+		$logPrefix=null))
+	{
+		exit;
+	}
+}
+
 # If mode is passon, an application must be set
 if (	isset($input['mode']) &&
 	$input['mode'] == 'passon' &&
