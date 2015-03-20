@@ -128,6 +128,7 @@ Alternatives or additions to phpYouDo
 * [Reportico](http://reportico.org/)
 * [SynApp2](http://www.synapp2.org/)
 * [VFront](http://www.vfront.org/)
+* [grocery CRUD](http://www.grocerycrud.com/)
 
 
 Glossary and abbreviations
