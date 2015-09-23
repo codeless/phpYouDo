@@ -794,10 +794,12 @@ function processReport($report=null)
 				if ($cache) {
 					$cachedir = dirname($cachefile);
 					$parentdir = dirname($cachedir);
-					if (!is_dir($cachedir) &&
-						is_writeable($parentdir))
-					{
-						mkdir($cachedir);
+					if (!is_dir($cachedir)) {
+						if (is_writeable($parentdir)) {
+							mkdir($cachedir);
+						} else {
+							querylog('Could not create cache-directory ' . $cachedir);
+						}
 					}
 
 					# Write to cache
