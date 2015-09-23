@@ -793,15 +793,20 @@ function processReport($report=null)
 
 				if ($cache) {
 					$cachedir = dirname($cachefile);
-					if (!is_dir($cachedir)) {
+					$parentdir = dirname($cachedir);
+					if (!is_dir($cachedir) &&
+						is_writeable($parentdir))
+					{
 						mkdir($cachedir);
 					}
 
 					# Write to cache
-					file_put_contents(
-						$cachefile,
-						serialize($results)
-					);
+					if (is_dir($cachedir)) {
+						file_put_contents(
+							$cachefile,
+							serialize($results)
+						);
+					}
 
 					if ($log) {
 						querylog('Results cached',
