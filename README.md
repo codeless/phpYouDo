@@ -122,6 +122,8 @@ Make use of the [General Query Log](https://dev.mysql.com/doc/refman/5.1/en/quer
 Alternatives or additions to phpYouDo
 =====================================
 
+* [Portofino](http://portofino.manydesigns.com/)
+* [Metabase](http://www.metabase.com/)
 * [Dadabik](http://www.dadabik.org/)
 * [DbToRia](http://www.dbtoria.org/)
 * [PHPLens](http://phplens.com/)
