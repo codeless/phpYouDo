@@ -1,0 +1,19 @@
+<% if (items.length == 1) return; %>
+<div class="row">
+	<div class="large-12 columns">
+		<a class="tiny button" href="?">&laquo;
+			Return to the overview</a>
+		<a href="#" data-dropdown="applications-dropdown"
+			class="tiny secondary button dropdown">Choose an
+			application</a><br>
+		<ul id="applications-dropdown" data-dropdown-content
+			class="f-dropdown">
+			<%
+				_.each(items, function(i) {%>
+					<li><a href="?application=<%= i %>">
+						<%= i %></a></li><%
+				});
+			%>
+		</ul>
+	</div>
+</div>

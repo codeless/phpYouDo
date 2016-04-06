@@ -909,7 +909,7 @@ function declareDefaultTemplates()
 		if (_.size(items) < 10) {
 			_.each(items, function(description, name) {
 				%>
-					<div class="panel">
+					<div class="callout">
 						<h3><%= name %></h3>
 						<pre><%= description %></pre>
 						<br>
@@ -926,15 +926,14 @@ function declareDefaultTemplates()
 			_.each(items, function(description, name) {
 				%>
 				<div class="large-3 columns">
-					<div class="panel">
+					<div class="callout">
 					<span data-tooltip class="has-tip"
 						title="<%= description %>"
 						><%= name %></span>
 					<br>
 					<br>
 					<a href="?application=<%= name %>"
-						class="small button">
-						Start &raquo;
+						class="button">Start &raquo;
 					</a>
 					</div>
 				</div>
@@ -950,15 +949,22 @@ EOT;
 <% if (items.length == 1) return; %>
 <div class="row">
 	<div class="large-12 columns">
-		<a class="tiny button" href="?">&laquo; Return to the overview</a>
-		<a href="#" data-dropdown="applications-dropdown"
-			class="tiny secondary button dropdown">Choose an application</a><br>
-		<ul id="applications-dropdown" data-dropdown-content class="f-dropdown">
-			<%
-				_.each(items, function(i) {%>
-					<li><a href="?application=<%= i %>"><%= i %></a></li><%
-				});
-			%>
+		<ul class="dropdown menu" data-dropdown-menu>
+			<li><a class="button" href="?">&laquo;
+				Return to the overview</a></li>
+			<li>
+				<a class="secondary dropdown button"
+					href="#">Choose an application</a>
+				<ul class="menu">
+					<%
+						_.each(items, function(i) {%>
+							<li><a href="?application=<%= i %>">
+								<%= i %>
+							</a></li><%
+						});
+					%>
+				</ul>
+			</li>
 		</ul>
 	</div>
 </div>
@@ -968,19 +974,17 @@ EOT;
 	<div class="large-12 columns">
 		<h2>Active application: <%= activeApplication %></h2>
 		<h3>Please choose a report:</h3>
-		<ul class="button-group">
+		<div class="button-group">
 			<%
 				_.each(items, function(i) {
 					%>
-						<li class="pyd-report-<%= i %>">
-							<a href="?application=<%= activeApplication %>&report=<%= i %>" class="active button">
-								<%= i %>
-							</a>
-						</li>
+						<a href="?application=<%= activeApplication %>&report=<%= i %>" class="active button pyd-report-<%= i %>">
+							<%= i %>
+						</a>
 					<%
 				});
 			%>
-		</ul>
+		</div>
 	</div>
 </div>
 EOT;
@@ -1048,21 +1052,19 @@ EOT;
 
 %PYD_CONTENT%
 
+<script type="text/javascript">
+	$(document).foundation();
+</script>
 </body>
 </html>
 EOT;
 	$defaultTemplates['styles'] =<<< EOT
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/2.1.0/normalize.css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/css/foundation.min.css">
-	<script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.2.0/foundation.min.css">
 EOT;
 	$defaultTemplates['scripts'] =<<< EOT
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.2.2/js/foundation.min.js"></script>
-<script type="text/javascript">
-	$(function() { $(document).foundation(); });
-</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/foundation/6.2.0/foundation.min.js"></script>
 EOT;
 
 	# Globalize default templates
