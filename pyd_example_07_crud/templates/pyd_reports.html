@@ -1,0 +1,18 @@
+<div class="row">
+        <div class="large-12 columns">
+                <h2>Active application: <%= activeApplication %></h2>
+                <h3>Please choose a report:</h3>
+                <div class="button-group">
+                        <%
+                                _.each(items, function(i) {
+                                        %>
+                                                <a href="?application=<%= activeApplication %>&report=<%= i %>" class="small active button pyd-report-<%= i %>">
+                                                        <%= i %>
+                                                </a>
+                                        <%
+                                });
+                        %>
+                </div>
+        </div>
+</div>
+
