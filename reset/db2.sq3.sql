@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS hits;
+CREATE TABLE hits (lorem TEXT NOT NULL);

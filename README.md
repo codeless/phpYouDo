@@ -9,8 +9,7 @@ With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP 
 [Intro slideshow (move along with cursor-keys)](http://www.codeless.at/phpyoudo/doc_intro)
 
 
-About
-=====
+# About
 
 DDWA's in general consist of these parts: HTML-Templates, PHP-Scripts and JavaScripts. Most often, these parts are tightly woven into each other, which makes it tricky for the designer to edit the HTML. Additionally, the PHP-Programmer has a hard time extracting SQL-queries for specific inspections.
 
@@ -24,8 +23,7 @@ An application in phpYouDo consists of one or more reports. Reports in turn cons
 Check out the [online demo](http://www.codeless.at/phpyoudo)!
 
 
-Features
-========
+# Features
 
 * SQL and HTML separation from PHP code
 * Easy integration of user-input from GET (:), POST (#) and SESSION ($) into SQL queries
@@ -39,8 +37,7 @@ Features
 * Execute your reports from the commandline (f.i. as cronjob)
 
 
-When to use phpYouDo?
-=====================
+# When to use phpYouDo?
 
 * The focus of your application is on the database
 * You plan to integrate multiple developers with different skills (PHP Dev, Database Dev, Design Dev)
@@ -50,16 +47,19 @@ When to use phpYouDo?
 * You want no "coded application", but a transparent one
 
 
-Requirements
-============
+# Requirements
 
 Server: PHP with PDO
 
 Client: A JavaScript enabled browser
 
 
-FAQ
-===
+# Installation
+
+Simple copy the index.php to any place you want on your webserver and start app-development!
+
+
+# FAQ
 
 __Q: Can PYD handle multiple databases in one application?__
 
@@ -110,17 +110,14 @@ Example log-entries:
 ~~~
 
 
-Best practices
-==============
+# Best practices
 
-Debugging SQL-statements with MySQL
------------------------------------
+## Debugging SQL-statements with MySQL
 
 Make use of the [General Query Log](https://dev.mysql.com/doc/refman/5.1/en/query-log.html).
 
 
-Alternatives or additions to phpYouDo
-=====================================
+# Alternatives or additions to phpYouDo
 
 * [Portofino](http://portofino.manydesigns.com/)
 * [Metabase](http://www.metabase.com/)
@@ -133,8 +130,7 @@ Alternatives or additions to phpYouDo
 * [grocery CRUD](http://www.grocerycrud.com/)
 
 
-Glossary and abbreviations
-==========================
+# Glossary and abbreviations
 
 PYD: phpYouDo
 
@@ -149,7 +145,6 @@ Subreport: A report within a report
 Query: An SQL statement
 
 
-License
-=======
+# License
 
 This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/.

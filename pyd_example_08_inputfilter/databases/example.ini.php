@@ -1,6 +1,7 @@
 ;<?php /*
 
-type=sqlite
-database=memory
+dsn=sqlite::memory:
+username=
+password=
 
 ; */
