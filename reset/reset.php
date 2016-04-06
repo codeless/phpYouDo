@@ -9,7 +9,7 @@ $config = parse_ini_file('dbs.ini');
 foreach ($config['dsn'] as $dsn) {
 	# Set filerights
 	$dbfile = str_replace('sqlite:', '', $dsn);
-	chmod($dbfile, 0666);
+	chmod($dbfile, 0644);
 
 	# Connect to db
 	$db = new PDO($dsn);
