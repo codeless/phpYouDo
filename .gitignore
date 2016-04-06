@@ -1,2 +1,3 @@
+*.swp
 phpunit.phar
 **/pydcache/*
