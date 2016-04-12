@@ -4,8 +4,6 @@ With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP 
 
 [![Build Status](https://travis-ci.org/codeless/phpYouDo.png?branch=master)](https://travis-ci.org/codeless/phpYouDo)
 
-[Demo](http://www.codeless.at/phpyoudo)
-
 [Intro slideshow (move along with cursor-keys)](http://www.codeless.at/phpyoudo/doc_intro)
 
 
@@ -19,8 +17,6 @@ phpYouDo tries to solve these problems by separating the PHP-Scripts from the SQ
 
 
 An application in phpYouDo consists of one or more reports. Reports in turn consists of one or more database queries. Each query can get visualized with an individual HTML or PHP template.
-
-Check out the [online demo](http://www.codeless.at/phpyoudo)!
 
 
 # Features
