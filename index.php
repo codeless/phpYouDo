@@ -514,7 +514,7 @@ function processReport($report=null)
 
 		# Load subreport?
 		$matches = array();
-		if (preg_match('/^report ([a-z0-9_]+)( .*)?/',
+		if (preg_match('/^report ([a-zA-Z0-9_]+)( .*)?/',
 			$sectionName,
 			$matches))
 		{
