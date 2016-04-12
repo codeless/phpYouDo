@@ -18,7 +18,7 @@ class SameParamMultipleTimesTest extends PHPUnit_Framework_TestCase
 		$this->expectOutputRegex('/get3 success/');
 
 		$this->expectOutputRegex('/s1 success/');
-		#$this->expectOutputRegex('/s2 success/');
-		#$this->expectOutputRegex('/s3 success/');
+		$this->expectOutputRegex('/s2 success/');
+		$this->expectOutputRegex('/s3 success/');
 	}
 }
