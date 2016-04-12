@@ -1276,11 +1276,17 @@ die($expr);
 			# instant_bind is important to enable
 			# dynamic binding of table or column names:
 			if ($instant_bind[$i] == '!') {
+				# Obligatory param?
+				if ($obligatory[$i] == '*') {
+					$value = '"PYD: Obligatory value for instant bind is missing"';
+				}
+
 				$expr = str_replace(
 					$matches[0][$i],
 					$value,
 					$expr
 				);
+
 				unset($matches[0][$i]);
 			} else {
 				$bindList[] = ':' . $paramID;
