@@ -1,53 +1,45 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
     <title>phpYouDo by codeless</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>phpYouDo</h1>
-        <p>Mini Webapp Engine</p>
-        <p class="view"><a href="https://github.com/codeless/phpYouDo">View the Project on GitHub <small>codeless/phpYouDo</small></a></p>
-        <ul>
-          <li><a href="https://github.com/codeless/phpYouDo/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/codeless/phpYouDo/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/codeless/phpYouDo">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <p>With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP gets standardized, clearly arranged and last but not least: mainly outsourced to the client.</p>
+    <section class="page-header">
+      <h1 class="project-name">phpYouDo</h1>
+      <h2 class="project-tagline">Mini Webapp Engine</h2>
+      <a href="https://github.com/codeless/phpYouDo" class="btn">View on GitHub</a>
+      <a href="https://github.com/codeless/phpYouDo/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/codeless/phpYouDo/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="http://www.codeless.at/phpyoudo.png" alt="" title="phpYouDo"></p>
+
+<p>With phpYouDo (PYD), the development of Database Driven WebApps (DDWA) with PHP gets standardized, clearly arranged and last but not least: mainly outsourced to the client.</p>
 
 <p><a href="https://travis-ci.org/codeless/phpYouDo"><img src="https://travis-ci.org/codeless/phpYouDo.png?branch=master" alt="Build Status"></a></p>
-
-<p><a href="http://www.codeless.at/phpyoudo">Demo</a></p>
 
 <p><a href="http://www.codeless.at/phpyoudo/doc_intro">Intro slideshow (move along with cursor-keys)</a></p>
 
 <h1>
-<a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h1>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About</h1>
 
 <p>DDWA's in general consist of these parts: HTML-Templates, PHP-Scripts and JavaScripts. Most often, these parts are tightly woven into each other, which makes it tricky for the designer to edit the HTML. Additionally, the PHP-Programmer has a hard time extracting SQL-queries for specific inspections.</p>
 
-<p>phpYouDo tries to solve these problems by separating the PHP-Scripts from the SQL-Queries and the HTML-Templates. SQL-Queries are outsourced to configuration files and HTML-Templates are combined with JavaScript to display the selected records.</p>
+<p>phpYouDo tries to solve these problems by separating the PHP-Scripts from the SQL-Queries and the HTML-Templates. SQL-Queries are outsourced to configuration files and HTML-Templates are combined with JavaScript to display the selected records:</p>
+
+<p><img src="http://www.codeless.at/phpyoudo/doc_intro/tech.png" alt="" title="General logic"></p>
 
 <p>An application in phpYouDo consists of one or more reports. Reports in turn consists of one or more database queries. Each query can get visualized with an individual HTML or PHP template.</p>
 
-<p>Check out the <a href="http://www.codeless.at/phpyoudo">online demo</a>!</p>
-
 <h1>
-<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h1>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h1>
 
 <ul>
 <li>SQL and HTML separation from PHP code</li>
@@ -60,8 +52,10 @@
 <li>Can manage multiple applications</li>
 <li>Lightweight library: phpYouDo as a library consists of only one file; additional scripts and files (JavaScript and CSS) are integrated via Content Delivery Networks (CDN)</li>
 <li>Execute your reports from the commandline (f.i. as cronjob)</li>
-</ul><h1>
-<a name="when-to-use-phpyoudo" class="anchor" href="#when-to-use-phpyoudo"><span class="octicon octicon-link"></span></a>When to use phpYouDo?</h1>
+</ul>
+
+<h1>
+<a id="when-to-use-phpyoudo" class="anchor" href="#when-to-use-phpyoudo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>When to use phpYouDo?</h1>
 
 <ul>
 <li>The focus of your application is on the database</li>
@@ -70,15 +64,22 @@
 <li>Your business logic is in the database</li>
 <li>You need an administrative gui — quick!</li>
 <li>You want no "coded application", but a transparent one</li>
-</ul><h1>
-<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h1>
+</ul>
+
+<h1>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h1>
 
 <p>Server: PHP with PDO</p>
 
 <p>Client: A JavaScript enabled browser</p>
 
 <h1>
-<a name="faq" class="anchor" href="#faq"><span class="octicon octicon-link"></span></a>FAQ</h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>Simple copy the index.php to any place you want on your webserver and start app-development!</p>
+
+<h1>
+<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQ</h1>
 
 <p><strong>Q: Can PYD handle multiple databases in one application?</strong></p>
 
@@ -126,25 +127,31 @@ log=1
 </code></pre>
 
 <h1>
-<a name="best-practices" class="anchor" href="#best-practices"><span class="octicon octicon-link"></span></a>Best practices</h1>
+<a id="best-practices" class="anchor" href="#best-practices" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Best practices</h1>
 
 <h2>
-<a name="debugging-sql-statements-with-mysql" class="anchor" href="#debugging-sql-statements-with-mysql"><span class="octicon octicon-link"></span></a>Debugging SQL-statements with MySQL</h2>
+<a id="debugging-sql-statements-with-mysql" class="anchor" href="#debugging-sql-statements-with-mysql" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Debugging SQL-statements with MySQL</h2>
 
 <p>Make use of the <a href="https://dev.mysql.com/doc/refman/5.1/en/query-log.html">General Query Log</a>.</p>
 
 <h1>
-<a name="alternatives-or-additions-to-phpyoudo" class="anchor" href="#alternatives-or-additions-to-phpyoudo"><span class="octicon octicon-link"></span></a>Alternatives or additions to phpYouDo</h1>
+<a id="alternatives-or-additions-to-phpyoudo" class="anchor" href="#alternatives-or-additions-to-phpyoudo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Alternatives or additions to phpYouDo</h1>
 
 <ul>
+<li><a href="https://github.com/airbnb/caravel">Caravel</a></li>
 <li><a href="http://www.dadabik.org/">Dadabik</a></li>
 <li><a href="http://www.dbtoria.org/">DbToRia</a></li>
+<li><a href="http://www.grocerycrud.com/">grocery CRUD</a></li>
+<li><a href="http://www.metabase.com/">Metabase</a></li>
 <li><a href="http://phplens.com/">PHPLens</a></li>
+<li><a href="http://portofino.manydesigns.com/">Portofino</a></li>
 <li><a href="http://reportico.org/">Reportico</a></li>
 <li><a href="http://www.synapp2.org/">SynApp2</a></li>
 <li><a href="http://www.vfront.org/">VFront</a></li>
-</ul><h1>
-<a name="glossary-and-abbreviations" class="anchor" href="#glossary-and-abbreviations"><span class="octicon octicon-link"></span></a>Glossary and abbreviations</h1>
+</ul>
+
+<h1>
+<a id="glossary-and-abbreviations" class="anchor" href="#glossary-and-abbreviations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Glossary and abbreviations</h1>
 
 <p>PYD: phpYouDo</p>
 
@@ -159,16 +166,18 @@ log=1
 <p>Query: An SQL statement</p>
 
 <h1>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
 
 <p>This work is licensed under the Creative Commons Attribution 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.</p>
-      </section>
-    </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/codeless">codeless</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/codeless/phpYouDo">phpYouDo</a> is maintained by <a href="https://github.com/codeless">codeless</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
   </body>
 </html>
