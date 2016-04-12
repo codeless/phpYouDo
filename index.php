@@ -2,7 +2,7 @@
 
 /**
  * phpYouDo (PYD) - Mini Webapp engine
- * @author Manuel H <more@codeless.at>
+ * @author more@codeless.at
  * @license http://creativecommons.org/licenses/by/4.0/
  *	Creative Commons Attribution 4.0 International License
  * Creation date: 2013-03-28
@@ -49,10 +49,7 @@ session_regenerate_id();
 
 # Pre-evaluate an expression?
 if (isset($appConfig) && isset($appConfig['pre'])) {
-	if (	!parseExpression($appConfig['pre'],
-		$log=0,
-		$logPrefix=null))
-	{
+	if (!parseExpression($appConfig['pre'])) {
 		exit;
 	}
 }
@@ -339,6 +336,11 @@ function attachToDocument($name, $data, $template=null, $affectedRows=null)
 		$template = (isset($defaultTemplates[$name]))
 			? $defaultTemplates[$name]
 			: $defaultTemplates['records'];
+	}
+
+	# Fix template name for paginations:
+	if ($name == 'pagination') {
+		$name .= '_' . $data[0]->sectionName;
 	}
 
 	# Attach template to document
@@ -734,6 +736,32 @@ function processReport($report=null)
 			}
 		}
 
+		# Pagination of results?
+		if (	isset($c['paginate']) && isset($c['total_records']) &&
+			$c['paginate'] && $c['total_records'])
+		{
+			# Process variables for total_records and pagination!!!
+			$total_records = validateExpression(
+				$c['total_records']
+			);
+			$paginate = validateExpression($c['paginate']);
+
+			# Get current page
+			$current_page = filter_input(
+				INPUT_GET,
+				'page_' . $sectionName,
+				FILTER_VALIDATE_INT
+			);
+
+			if (!$current_page) {
+				$current_page = 1;
+			}
+
+			# Adapt query
+			$offset = ($current_page * $paginate) - $paginate;
+			$query .= ' limit ' . $offset . ',' . $paginate;
+		}
+
 		$cachefile = $appPath . '/pydcache/' . $report .
 			'%' . $sectionName;
 		$cache = (isset($c['cache']) && $c['cache'] &&
@@ -777,13 +805,15 @@ function processReport($report=null)
 				$endtime	= microtime(true);
 				$duration	= $endtime - $starttime;
 				querylog('Seconds needed for binding params and ' .
-					'executing query: ' . $duration, $logPrefix);
+					'executing query: ' . $duration,
+					$logPrefix);
 			}
 
 			# If query could get executed successfully
 			if ($rc) {
 				$affectedRows 	= $statementHandle->rowCount();
-				$lastInsertId	= $databases[$databaseID]->lastInsertId();
+				$lastInsertId	= $databases[$databaseID]
+					->lastInsertId();
 				$results 	= array();
 
 				# Collect results:
@@ -854,38 +884,25 @@ function processReport($report=null)
 			}
 		}
 
-		# Compile path to PHP template
-		$tplFile = $tplPath . DIRECTORY_SEPARATOR .
-			(isset($c['template'])
-			? $c['template'] : $sectionName) . '.php';
+		passDataToTemplate(
+			$sectionName,
+			$sectionConfig=$c,
+			$queryName,
+			$results,
+			$affectedRows,
+			$lastInsertId
+		);
 
-		# When template is PHP script or mode is passon
-		if (is_file($tplFile) || $input['mode'] == 'passon') {
-			# Compile templatename
-			passon($results, $tplFile, $affectedRows, $lastInsertId);
-		}
-		else {
-			# Check for a template
-			$template = null;
-			if (isset($c['template'])) {
-				$templateFile = $appPath . '/templates/' .
-					$c['template'] . '.html';
-			} else {
-				$templateFile = $appPath . '/templates/' .
-					$sectionName . '.html';
-			}
+		# If pagination is active, load pagination template
+		if (isset($paginate) && isset($total_records)) {
+			outputPaginationTemplate(
+				$sectionName,
+				$current_page,
+				$paginate,
+				$total_records
+			);
 
-			# Check for file existance
-			if (is_file($templateFile)) {
-				$template = file_get_contents($templateFile);
-			}
-
-			# Print template and results:
-			attachToDocument(
-				$queryName,
-				$results,
-				$template,
-				$affectedRows);
+			unset($paginate, $total_records);
 		}
 	} while ($c = next($reportConfiguration));
 }
@@ -1030,6 +1047,32 @@ EOT;
 	</div>
 </div>
 EOT;
+	$defaultTemplates['pagination'] =<<< EOT
+<%
+	var total_pages = Math.ceil(items[0].totalRecords / items[0].paginate);
+	console.log(total_pages);
+%>
+<div class="row">
+<div class="large-12 columns">
+<ul class="pagination float-right" role="navigation"
+	aria-label="Pagination">
+	<%
+		for (var i=1; i<= total_pages; i++) {
+			if (i == items[0].currentPage) {
+				%><li class="current"><%= i %></li><%
+			} else {
+				var url = "?application=" + activeApplication
+					+ "&report=" + activeReport
+					+ "&page_" + items[0].sectionName
+					+ "=" + i;
+				%><li><a href="<%= url %>"><%= i %></a></li><%
+			}
+		}
+	%>
+</ul>
+</div>
+</div>
+EOT;
 	$defaultTemplates['main'] =<<< EOT
 <!DOCTYPE html>
 <html>
@@ -1100,7 +1143,7 @@ function querylog($msg, $prefix=null)
  *
  * @return string The expression with the integrated variable values
  */
-function parseExpression($expr, $log, $logPrefix)
+function parseExpression($expr, $log=0, $logPrefix=null, $validate=0)
 {
 	list($variables, $fixedExpr) = extractVariables($expr, ':');
 
@@ -1111,7 +1154,11 @@ function parseExpression($expr, $log, $logPrefix)
 		$fixedExpr);
 
 	# And some syntax:
-	$phpCode = 'return (' . $phpCode . ') ? 1 : 0;';
+	if ($validate) {
+		$phpCode = 'return (' . $phpCode . ');';
+	} else {
+		$phpCode = 'return (' . $phpCode . ') ? 1 : 0;';
+	}
 
 	# Log code
 	if ($log && $log == 1) {
@@ -1120,6 +1167,18 @@ function parseExpression($expr, $log, $logPrefix)
 	}
 
 	return (eval($phpCode));
+}
+
+
+/**
+ * Like parseExpression, but will return the value calculated in
+ * the expression, not just 0 or 1.
+ *
+ * @see parseExpression()
+ */
+function validateExpression($expr, $log=0, $logPrefix=null)
+{
+	return parseExpression($expr, $log, $logPrefix, $validate=1);
 }
 
 
@@ -1258,12 +1317,6 @@ $expr = str_replace(
 	$expr);
 						}
 					}
-/*
-echo '<pre>';
-print_r($bindList);
-print_r($matches[0]);
-die($expr);
-*/
 
 					# Set first value:
 					$value = $value[0];
@@ -1325,3 +1378,81 @@ die($expr);
 	return array($vars, $fixedExpr, $obligatoryParams);
 }
 
+
+function passDataToTemplate(
+	$sectionName,
+	$sectionConfig,
+	$queryName,
+	$results,
+	$affectedRows,
+	$lastInsertId
+)
+{
+	global $tplPath, $input, $appPath;
+
+	# Compile path to PHP template
+	$tplFile = $tplPath . DIRECTORY_SEPARATOR .
+		(isset($sectionConfig['template'])
+		? $sectionConfig['template'] : $sectionName) . '.php';
+
+	# When template is PHP script or mode is passon
+	if (is_file($tplFile) || $input['mode'] == 'passon') {
+		# Compile templatename
+		passon(
+			$results,
+			$tplFile,
+			$affectedRows,
+			$lastInsertId
+		);
+	}
+	else {
+		# Check for a template
+		$template = null;
+		if (isset($sectionConfig['template'])) {
+			$templateFile = $appPath . '/templates/' .
+				$sectionConfig['template'] . '.html';
+		} else {
+			$templateFile = $appPath . '/templates/' .
+				$sectionName . '.html';
+		}
+
+		# Check for file existance
+		if (is_file($templateFile)) {
+			$template = file_get_contents(
+				$templateFile
+			);
+		}
+
+		# Print template and results:
+		attachToDocument(
+			$queryName,
+			$results,
+			$template,
+			$affectedRows
+		);
+	}
+}
+
+
+function outputPaginationTemplate(
+	$sectionName,
+	$current_page,
+	$paginate,
+	$total_records
+)
+{
+	$data = new StdClass;
+	$data->currentPage = $current_page;
+	$data->paginate = $paginate;
+	$data->totalRecords = $total_records;
+	$data->sectionName = $sectionName;
+
+	passDataToTemplate(
+		$sectionName='pagination',
+		$sectionConfig=array(),
+		$queryName='pagination',
+		$results=array($data),
+		$affectedRows=0,
+		$lastInsertId=0
+	);
+}
