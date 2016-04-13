@@ -1330,7 +1330,7 @@ $expr = str_replace(
 			# dynamic binding of table or column names:
 			if ($instant_bind[$i] == '!') {
 				# Obligatory param?
-				if ($obligatory[$i] == '*') {
+				if ($obligatory[$i] == '*' && !$value) {
 					$value = '"PYD: Obligatory value for instant bind is missing"';
 				}
 
